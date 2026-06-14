@@ -627,11 +627,76 @@ def page_report():
     severity = st.radio("Severity", ["Low", "Medium", "High"], horizontal=True, key="report_sev")
 
     st.markdown('<h3>Location</h3>', unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        lat = st.number_input("Latitude", value=user["lat"], format="%.6f", key="report_lat")
-    with col2:
-        lon = st.number_input("Longitude", value=user["lon"], format="%.6f", key="report_lon")
+
+    # ── REAL-TIME LOCATION CAPTURE (Report Issue) ───────────────
+    # Initialise persistent geo state for this report session
+    if "report_geo_lat" not in st.session_state:
+        st.session_state["report_geo_lat"] = user["lat"]
+        st.session_state["report_geo_lon"] = user["lon"]
+        st.session_state["report_geo_source"] = None
+
+    # Browser geolocation component
+    _rpt_geo = streamlit_geolocation()
+    if _rpt_geo and _rpt_geo.get("latitude"):
+        st.session_state["report_geo_lat"] = _rpt_geo["latitude"]
+        st.session_state["report_geo_lon"] = _rpt_geo["longitude"]
+        st.session_state["report_geo_source"] = "browser"
+
+    # Status display
+    if st.session_state["report_geo_source"] == "browser":
+        _rlat = st.session_state["report_geo_lat"]
+        _rlon = st.session_state["report_geo_lon"]
+        try:
+            _rgc = get_geocoder()
+            _rrev = _rgc.reverse(f"{_rlat},{_rlon}", timeout=5)
+            _raddr = _rrev.raw.get("address", {})
+            _rloc = (
+                _raddr.get("suburb") or _raddr.get("neighbourhood") or
+                _raddr.get("town") or _rrev.address.split(",")[0]
+            )
+        except Exception:
+            _rloc = f"{_rlat:.4f}°N, {_rlon:.4f}°E"
+        st.success(f"✅ Issue location detected: **{_rloc}**")
+    elif st.session_state["report_geo_source"] == "search":
+        _rlat = st.session_state["report_geo_lat"]
+        _rlon = st.session_state["report_geo_lon"]
+        st.info(f"📌 Location set: {_rlat:.4f}°N, {_rlon:.4f}°E")
+    else:
+        st.caption("⬆ Click above to pin your exact GPS position, or search a landmark below.")
+
+    # Manual fallback — landmark text search
+    st.markdown('<p style="color:#888;font-size:12px;margin-top:6px;">Or search by landmark / street name:</p>', unsafe_allow_html=True)
+    _rcol_lm, _rcol_find = st.columns([4, 1])
+    with _rcol_lm:
+        _rlm = st.text_input(
+            "", key="report_landmark",
+            placeholder="e.g. Jubilee Hills Checkpost, LB Nagar flyover…",
+            label_visibility="collapsed"
+        )
+    with _rcol_find:
+        if st.button("Find", key="btn_report_geo_find"):
+            if _rlm:
+                try:
+                    _rgc2 = get_geocoder()
+                    _rfwd = _rgc2.geocode(
+                        f"{_rlm}, Hyderabad, Telangana, India", timeout=5
+                    )
+                    if _rfwd:
+                        st.session_state["report_geo_lat"] = _rfwd.latitude
+                        st.session_state["report_geo_lon"] = _rfwd.longitude
+                        st.session_state["report_geo_source"] = "search"
+                        st.rerun()
+                    else:
+                        st.warning("Landmark not found — try a different name.")
+                except Exception:
+                    st.warning("Search unavailable. Your profile location will be used.")
+            else:
+                st.warning("Please enter a landmark name first.")
+
+    # Final resolved coordinates
+    lat = st.session_state["report_geo_lat"]
+    lon = st.session_state["report_geo_lon"]
+    # ─────────────────────────────────────────────────────────────
 
     b64 = st.session_state.get("report_b64") or image_b64
 
