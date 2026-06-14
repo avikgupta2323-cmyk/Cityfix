@@ -45,7 +45,8 @@ body, .stApp { background-color: #0E1117 !important; color: #FFFFFF !important; 
 }
 .stButton > button:hover { background-color: #00cc1e !important; }
 .stProgress > div > div { background-color: #E0FF00 !important; }
-h1, h2, h3 { color: #FFFFFF !important; }
+h1, h3 { color: #FFFFFF !important; }
+h2 { color: #000000 !important; }
 p, label, .stMarkdown { color: #000000 !important; background: transparent !important; }
 .stTextInput > div > div > input {
   background-color: #1A1D24 !important;
@@ -69,7 +70,7 @@ p, label, .stMarkdown { color: #000000 !important; background: transparent !impo
   background-color: #E0FF00 !important;
   color: #000000 !important;
 }
-.st-emotion-cache-u1kubd { background-color: #60fcdb !important; }
+.st-emotion-cache-u1kubd { background-color: transparent !important; }
 .stSidebar { background-color: #0E1117 !important; }
 .stSidebar .stButton > button {
   width: 100% !important;
