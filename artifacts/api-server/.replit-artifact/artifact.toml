@@ -1,8 +1,16 @@
 kind = "api"
-previewPath = "/api" # TODO - should be excluded from preview in the first place
+previewPath = "/"
 title = "API Server"
 version = "1.0.0"
 id = "3B4_FFSkEVBkAeYMFRJ2e"
+
+[[services]]
+localPort = 5000
+name = "CityFix"
+paths = ["/"]
+
+[services.development]
+run = "streamlit run app.py --server.port 5000"
 
 [[services]]
 localPort = 8080
