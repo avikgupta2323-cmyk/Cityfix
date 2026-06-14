@@ -897,14 +897,52 @@ def page_voting():
 
 
 # ─────────────────────────────────────────────
-# MODULE 8 — CITY MAP
+# MODULE 8 — CITY MAP  (+ Heat Map)
 # ─────────────────────────────────────────────
+
+def _neighborhood_health(issues):
+    """Return dict: locality -> {score, open, fixed, critical_votes, issues}."""
+    from collections import defaultdict
+    zones = defaultdict(lambda: {"open": 0, "fixed": 0, "deductions": 0, "critical_votes": 0, "issues": []})
+    sev_deduct = {"Low": 5, "Medium": 10, "High": 18}
+    for iss in issues:
+        loc = iss["locality"]
+        zones[loc]["issues"].append(iss)
+        if iss["status"] == "Fixed":
+            zones[loc]["fixed"] += 1
+        else:
+            zones[loc]["open"] += 1
+            zones[loc]["deductions"] += sev_deduct.get(iss["severity"], 5)
+            if iss["severity"] == "High":
+                zones[loc]["critical_votes"] += iss["votes"]
+    result = {}
+    for loc, z in zones.items():
+        raw = max(0, 100 - z["deductions"] + z["fixed"] * 3)
+        result[loc] = {
+            "score": min(100, raw),
+            "open": z["open"],
+            "fixed": z["fixed"],
+            "critical_votes": z["critical_votes"],
+            "issues": z["issues"],
+        }
+    return result
+
+
+def _health_color(score):
+    if score >= 80: return "#00FF99", "Healthy"
+    if score >= 60: return "#E0FF00", "Moderate"
+    if score >= 40: return "#FF6600", "Stressed"
+    return "#FF1E1E", "Critical"
+
+
 def page_map():
     import folium
+    from folium.plugins import HeatMap, MarkerCluster
     from streamlit_folium import st_folium
 
     st.markdown('<h1>🗺️ City Map</h1>', unsafe_allow_html=True)
     user = st.session_state["current_user"]
+    issues = st.session_state["issues"]
 
     color_map = {
         "Road Issues": "red", "Garbage": "darkred", "Drainage": "purple",
@@ -912,50 +950,223 @@ def page_map():
         "Stray Animals": "green", "Parks": "darkgreen",
         "Illegal Dumping": "gray", "Other": "cadetblue"
     }
-
-    m = folium.Map(location=[17.3850, 78.4867], zoom_start=12, tiles="CartoDB dark_matter")
-    folium.Circle(
-        location=[user["lat"], user["lon"]],
-        radius=500, color="#E0FF00", fill=True, fill_opacity=0.1
-    ).add_to(m)
-    folium.CircleMarker(
-        location=[user["lat"], user["lon"]],
-        radius=10, color="#E0FF00", fill=True, fill_opacity=1,
-        tooltip="Your Location"
-    ).add_to(m)
-    for issue in st.session_state["issues"]:
-        clr = color_map.get(issue["category"], "cadetblue")
-        img_tag = f'<img src="{issue["image_url"]}" style="width:120px;border-radius:4px;">' if issue.get("image_url") else ""
-        popup_html = f"""<div style="min-width:160px;">
-          {img_tag}
-          <b>{issue["title"][:40]}</b><br>
-          {issue["category"]}<br>
-          👍 {issue["votes"]} votes<br>
-          Status: {issue["status"]}
-        </div>"""
-        folium.CircleMarker(
-            location=[issue["lat"], issue["lon"]],
-            radius=12, color=clr, fill=True, fill_opacity=0.85,
-            popup=folium.Popup(popup_html, max_width=220),
-            tooltip=f"{issue['title'][:30]} | {issue['votes']} votes"
-        ).add_to(m)
-
-    st_folium(m, width=None, height=560)
-
-    # Legend
-    legend_items = list(color_map.items())
     color_hex = {
         "red": "#FF4444", "darkred": "#8B0000", "purple": "#9933FF",
         "blue": "#3399FF", "orange": "#FF9900", "green": "#33CC33",
         "darkgreen": "#006400", "gray": "#888888", "cadetblue": "#5F9EA0"
     }
-    legend_html = "".join([
-        f'<span style="display:inline-flex;align-items:center;gap:6px;margin:4px 12px 4px 0;">'
-        f'<span style="width:14px;height:14px;border-radius:50%;background:{color_hex.get(v, "#888")};display:inline-block;"></span>'
-        f'<span style="color:#C0C0C0;font-size:13px;">{k}</span></span>'
-        for k, v in legend_items
-    ])
-    st.markdown(card(f'<div style="color:#888;font-size:12px;margin-bottom:8px;">CATEGORY LEGEND</div><div style="display:flex;flex-wrap:wrap;">{legend_html}</div>'), unsafe_allow_html=True)
+
+    tab_issue, tab_heat, tab_zones = st.tabs(["🗺️ Issue Map", "🔥 Heat Map", "📊 Zone Analytics"])
+
+    # ── TAB 1: Issue Map (with cluster) ──────────────────────────
+    with tab_issue:
+        m = folium.Map(location=[17.3850, 78.4867], zoom_start=12, tiles="CartoDB dark_matter")
+        folium.Circle(
+            location=[user["lat"], user["lon"]],
+            radius=500, color="#E0FF00", fill=True, fill_opacity=0.1
+        ).add_to(m)
+        folium.CircleMarker(
+            location=[user["lat"], user["lon"]],
+            radius=10, color="#E0FF00", fill=True, fill_opacity=1,
+            tooltip="📍 Your Location"
+        ).add_to(m)
+        cluster = MarkerCluster(name="Issues").add_to(m)
+        for issue in issues:
+            clr = color_map.get(issue["category"], "cadetblue")
+            img_tag = f'<img src="{issue["image_url"]}" style="width:120px;border-radius:4px;">' if issue.get("image_url") else ""
+            popup_html = f"""<div style="min-width:160px;">
+              {img_tag}
+              <b>{issue["title"][:40]}</b><br>
+              {issue["category"]}<br>
+              👍 {issue["votes"]} votes<br>
+              Status: {issue["status"]}
+            </div>"""
+            folium.CircleMarker(
+                location=[issue["lat"], issue["lon"]],
+                radius=12, color=color_hex.get(clr, "#888"), fill=True, fill_opacity=0.85,
+                popup=folium.Popup(popup_html, max_width=220),
+                tooltip=f"{issue['title'][:30]} | {issue['votes']} votes"
+            ).add_to(cluster)
+        st_folium(m, width=None, height=540, key="map_issue")
+        legend_html = "".join([
+            f'<span style="display:inline-flex;align-items:center;gap:6px;margin:4px 12px 4px 0;">'
+            f'<span style="width:14px;height:14px;border-radius:50%;background:{color_hex.get(v,"#888")};display:inline-block;"></span>'
+            f'<span style="color:#C0C0C0;font-size:13px;">{k}</span></span>'
+            for k, v in color_map.items()
+        ])
+        st.markdown(card(f'<div style="color:#888;font-size:12px;margin-bottom:8px;">CATEGORY LEGEND</div><div style="display:flex;flex-wrap:wrap;">{legend_html}</div>'), unsafe_allow_html=True)
+
+    # ── TAB 2: Heat Map ───────────────────────────────────────────
+    with tab_heat:
+        sev_weight = {"Low": 1, "Medium": 2, "High": 3}
+
+        # Controls
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            weight_mode = st.selectbox(
+                "Weight by", ["Severity × Votes", "Vote Count Only", "Raw Count (Equal Weight)"],
+                key="hm_weight"
+            )
+        with col_b:
+            cat_filter = st.selectbox(
+                "Filter Category", ["All Categories"] + list(color_map.keys()),
+                key="hm_cat"
+            )
+        with col_c:
+            radius_px = st.slider("Blur Radius", 10, 60, 25, key="hm_radius")
+
+        filtered = issues if cat_filter == "All Categories" else [i for i in issues if i["category"] == cat_filter]
+
+        heat_data = []
+        for iss in filtered:
+            if weight_mode == "Severity × Votes":
+                w = sev_weight.get(iss["severity"], 1) * max(iss["votes"], 1)
+            elif weight_mode == "Vote Count Only":
+                w = max(iss["votes"], 1)
+            else:
+                w = 1
+            heat_data.append([iss["lat"], iss["lon"], w])
+
+        hm = folium.Map(location=[17.3850, 78.4867], zoom_start=12, tiles="CartoDB dark_matter")
+
+        # User marker
+        folium.CircleMarker(
+            location=[user["lat"], user["lon"]],
+            radius=10, color="#E0FF00", fill=True, fill_opacity=1,
+            tooltip="📍 Your Location"
+        ).add_to(hm)
+
+        if heat_data:
+            HeatMap(
+                heat_data,
+                radius=radius_px,
+                blur=radius_px // 2,
+                min_opacity=0.4,
+                max_zoom=15,
+                gradient={
+                    "0.0": "#003CFF",
+                    "0.3": "#9933FF",
+                    "0.55": "#FF6600",
+                    "0.75": "#FF1E1E",
+                    "1.0": "#FFFFFF",
+                }
+            ).add_to(hm)
+
+        # Neighborhood health zone circles
+        zone_data = _neighborhood_health(issues)
+        # Approximate zone centre coords (centroid of issues in that locality)
+        from collections import defaultdict
+        loc_coords = defaultdict(list)
+        for iss in issues:
+            loc_coords[iss["locality"]].append((iss["lat"], iss["lon"]))
+        for loc, coords in loc_coords.items():
+            clat = sum(c[0] for c in coords) / len(coords)
+            clon = sum(c[1] for c in coords) / len(coords)
+            zinfo = zone_data.get(loc, {"score": 100, "open": 0, "fixed": 0})
+            zcolor, zlabel = _health_color(zinfo["score"])
+            folium.Circle(
+                location=[clat, clon],
+                radius=800,
+                color=zcolor,
+                fill=True,
+                fill_opacity=0.12,
+                weight=2,
+                tooltip=f"{loc}: {zlabel} ({zinfo['score']}/100) | {zinfo['open']} open issues"
+            ).add_to(hm)
+            folium.Marker(
+                location=[clat, clon],
+                icon=folium.DivIcon(
+                    html=f'<div style="font-size:11px;font-weight:700;color:{zcolor};text-shadow:0 0 4px #000,0 0 4px #000;white-space:nowrap;">{loc}<br>{zinfo["score"]}/100</div>',
+                    icon_size=(90, 32),
+                    icon_anchor=(45, 16),
+                ),
+                tooltip=f"{loc} — {zlabel}"
+            ).add_to(hm)
+
+        st_folium(hm, width=None, height=540, key="map_heat")
+
+        # Heat map legend
+        gradient_html = """
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+          <span style="color:#888;font-size:12px;">HEAT INTENSITY:</span>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="width:100px;height:12px;border-radius:6px;background:linear-gradient(to right,#003CFF,#9933FF,#FF6600,#FF1E1E,#FFFFFF);display:inline-block;"></span>
+          </div>
+          <span style="color:#888;font-size:11px;">Low →</span><span style="color:#FFFFFF;font-size:11px;">High</span>
+        </div>
+        <div style="color:#888;font-size:12px;margin-bottom:6px;">NEIGHBORHOOD HEALTH ZONES:</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <span style="color:#00FF99;font-size:13px;">🟢 80–100 Healthy</span>
+          <span style="color:#E0FF00;font-size:13px;">🟡 60–79 Moderate</span>
+          <span style="color:#FF6600;font-size:13px;">🟠 40–59 Stressed</span>
+          <span style="color:#FF1E1E;font-size:13px;">🔴 0–39 Critical</span>
+        </div>"""
+        st.markdown(card(gradient_html), unsafe_allow_html=True)
+
+    # ── TAB 3: Zone Analytics ─────────────────────────────────────
+    with tab_zones:
+        st.markdown('<h3>📊 Neighborhood Civic Health Scores</h3>', unsafe_allow_html=True)
+
+        zone_data = _neighborhood_health(issues)
+        if not zone_data:
+            st.markdown('<p style="color:#888;">No issues yet to analyze.</p>', unsafe_allow_html=True)
+        else:
+            sorted_zones = sorted(zone_data.items(), key=lambda x: x[1]["score"])
+
+            # Summary KPIs
+            avg_score = sum(z["score"] for z in zone_data.values()) / len(zone_data)
+            total_open = sum(z["open"] for z in zone_data.values())
+            total_fixed = sum(z["fixed"] for z in zone_data.values())
+            worst = sorted_zones[0][0]
+            best = sorted_zones[-1][0]
+
+            kc1, kc2, kc3, kc4 = st.columns(4)
+            for col, label, value, color in [
+                (kc1, "Avg Health Score", f"{avg_score:.0f}/100", "#E0FF00"),
+                (kc2, "Open Issues", str(total_open), "#FF6600"),
+                (kc3, "Fixed Issues", str(total_fixed), "#00FF99"),
+                (kc4, "Needs Attention", worst, "#FF1E1E"),
+            ]:
+                with col:
+                    st.markdown(card(f'<div style="color:#888;font-size:11px;">{label}</div><div style="color:{color};font-size:22px;font-weight:900;">{value}</div>'), unsafe_allow_html=True)
+
+            st.markdown('<h3>Zone Breakdown</h3>', unsafe_allow_html=True)
+
+            for loc, zinfo in sorted_zones:
+                score = zinfo["score"]
+                zcolor, zlabel = _health_color(score)
+                bar_pct = score
+
+                cat_counts = {}
+                for iss in zinfo["issues"]:
+                    cat_counts[iss["category"]] = cat_counts.get(iss["category"], 0) + 1
+                top_cats = sorted(cat_counts.items(), key=lambda x: -x[1])[:3]
+                cat_html = " ".join([f'<span style="background:#222;border:1px solid #444;color:#C0C0C0;padding:2px 8px;border-radius:999px;font-size:11px;">{c} ×{n}</span>' for c, n in top_cats])
+
+                is_worst = (loc == worst)
+                is_best = (loc == best)
+                badge = ' <span style="background:#FF1E1E22;border:1px solid #FF1E1E;color:#FF1E1E;padding:2px 8px;border-radius:999px;font-size:11px;">⚠️ Needs Attention</span>' if is_worst else (' <span style="background:#00FF9922;border:1px solid #00FF99;color:#00FF99;padding:2px 8px;border-radius:999px;font-size:11px;">🌟 Top Locality</span>' if is_best else "")
+
+                content = f"""
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+                  <div style="flex:1;min-width:180px;">
+                    <div style="color:#FFFFFF;font-size:17px;font-weight:700;">📍 {loc}{badge}</div>
+                    <div style="margin:6px 0;display:flex;flex-wrap:wrap;gap:4px;">{cat_html}</div>
+                    <div style="color:#888;font-size:13px;">
+                      {zinfo["open"]} open · {zinfo["fixed"]} fixed · {zinfo["critical_votes"]} critical votes
+                    </div>
+                  </div>
+                  <div style="flex:0 0 140px;text-align:right;">
+                    <div style="color:{zcolor};font-size:28px;font-weight:900;">{score}/100</div>
+                    <div style="color:{zcolor};font-size:13px;font-weight:600;">{zlabel}</div>
+                  </div>
+                </div>
+                <div style="margin-top:10px;">
+                  <div style="height:8px;background:#2A2A2A;border-radius:4px;overflow:hidden;">
+                    <div style="width:{bar_pct}%;height:100%;background:{zcolor};border-radius:4px;transition:width 0.5s;"></div>
+                  </div>
+                </div>"""
+                st.markdown(card(content), unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
