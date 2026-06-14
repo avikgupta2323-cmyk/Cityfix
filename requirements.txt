@@ -5,3 +5,5 @@ geopy>=2.4.1
 Pillow>=10.2.0
 fpdf2>=2.7.9
 requests>=2.31.0
+streamlit-geolocation>=0.0.10
+streamlit-js-eval>=1.0.0

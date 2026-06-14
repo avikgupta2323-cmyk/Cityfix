@@ -9,6 +9,7 @@ import ssl
 import random
 from datetime import datetime, timedelta
 from PIL import Image
+from streamlit_geolocation import streamlit_geolocation
 
 # ─────────────────────────────────────────────
 # SESSION STATE INITIALIZATION
@@ -364,8 +365,78 @@ def page_login():
                 name_su = st.text_input("Full Name", key="su_name", placeholder="Rahul Sharma")
                 email_su = st.text_input("Email", key="su_email", placeholder="rahul@example.com")
                 pass_su = st.text_input("Password", type="password", key="su_pass", placeholder="Min 6 characters")
-                lat_su = st.number_input("Your Latitude", value=17.4474, format="%.6f", key="su_lat")
-                lon_su = st.number_input("Your Longitude", value=78.3814, format="%.6f", key="su_lon")
+                # ── REAL-TIME LOCATION CAPTURE ──────────────────────
+                st.markdown('<p style="color:#E0FF00;font-weight:700;margin-bottom:4px;">📍 Your Location</p>', unsafe_allow_html=True)
+
+                # Initialise persistent geo state for signup
+                if "signup_geo_lat" not in st.session_state:
+                    st.session_state["signup_geo_lat"] = 17.4474
+                    st.session_state["signup_geo_lon"] = 78.3814
+                    st.session_state["signup_geo_source"] = None
+
+                # Browser geolocation component — renders a "Locate me" button
+                geo_result = streamlit_geolocation()
+                if geo_result and geo_result.get("latitude"):
+                    st.session_state["signup_geo_lat"] = geo_result["latitude"]
+                    st.session_state["signup_geo_lon"] = geo_result["longitude"]
+                    st.session_state["signup_geo_source"] = "browser"
+
+                # Status display
+                if st.session_state["signup_geo_source"] == "browser":
+                    _clat = st.session_state["signup_geo_lat"]
+                    _clon = st.session_state["signup_geo_lon"]
+                    try:
+                        _gc = get_geocoder()
+                        _rev = _gc.reverse(f"{_clat},{_clon}", timeout=5)
+                        _addr = _rev.raw.get("address", {})
+                        _loc_name = (
+                            _addr.get("suburb") or _addr.get("neighbourhood") or
+                            _addr.get("town") or _rev.address.split(",")[0]
+                        )
+                    except Exception:
+                        _loc_name = f"{_clat:.4f}°N, {_clon:.4f}°E"
+                    st.success(f"✅ Location detected: **{_loc_name}**")
+                elif st.session_state["signup_geo_source"] == "search":
+                    _clat = st.session_state["signup_geo_lat"]
+                    _clon = st.session_state["signup_geo_lon"]
+                    st.info(f"📌 Location set: {_clat:.4f}°N, {_clon:.4f}°E")
+                else:
+                    st.caption("⬆ Click above to use device GPS, or search a landmark below.")
+
+                # Manual fallback — landmark text search
+                st.markdown('<p style="color:#888;font-size:12px;margin-top:6px;">Or search by landmark / neighbourhood:</p>', unsafe_allow_html=True)
+                _col_lm, _col_find = st.columns([4, 1])
+                with _col_lm:
+                    _landmark = st.text_input(
+                        "", key="su_landmark",
+                        placeholder="e.g. KPHB Colony, Banjara Hills, Hitech City…",
+                        label_visibility="collapsed"
+                    )
+                with _col_find:
+                    if st.button("Find", key="btn_geo_find"):
+                        if _landmark:
+                            try:
+                                _gc2 = get_geocoder()
+                                _fwd = _gc2.geocode(
+                                    f"{_landmark}, Hyderabad, Telangana, India",
+                                    timeout=5
+                                )
+                                if _fwd:
+                                    st.session_state["signup_geo_lat"] = _fwd.latitude
+                                    st.session_state["signup_geo_lon"] = _fwd.longitude
+                                    st.session_state["signup_geo_source"] = "search"
+                                    st.rerun()
+                                else:
+                                    st.warning("Landmark not found — try a different name.")
+                            except Exception:
+                                st.warning("Search unavailable. Default Hyderabad centre will be used.")
+                        else:
+                            st.warning("Please enter a landmark name first.")
+
+                # Final resolved coordinates (bound to session_state)
+                lat_su = st.session_state["signup_geo_lat"]
+                lon_su = st.session_state["signup_geo_lon"]
+                # ─────────────────────────────────────────────────────
 
                 if st.button("Send OTP", key="btn_send_otp"):
                     if not name_su or not email_su or not pass_su:
