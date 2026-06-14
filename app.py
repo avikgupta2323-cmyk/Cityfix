@@ -1465,7 +1465,7 @@ def page_admin():
 
     st.markdown('<h1>🏛️ Admin & Municipal Matrix</h1>', unsafe_allow_html=True)
 
-    tab_queue, tab_ai, tab_helpline = st.tabs(["📊 Priority Queue", "✍️ AI Escalation Mail", "📞 Helpline Directory"])
+    tab_queue, tab_ai, tab_dispatch, tab_helpline = st.tabs(["📊 Priority Queue", "✍️ AI Escalation Mail", "📨 Ward Officer Dispatch", "📞 Helpline Directory"])
 
     # TAB 1: Priority Queue
     with tab_queue:
@@ -1549,7 +1549,337 @@ def page_admin():
                     placeholder.markdown(card(f'<pre style="color:#C0C0C0;font-family:monospace;white-space:pre-wrap;font-size:13px;">{full_text}</pre>'), unsafe_allow_html=True)
                     time.sleep(0.04)
 
-    # TAB 3: Helpline Directory
+    # TAB 3: Ward Officer Email Dispatch
+    with tab_dispatch:
+        from fpdf import FPDF
+
+        st.markdown('<h3>📨 Ward Officer Email Dispatch</h3>', unsafe_allow_html=True)
+
+        if "dispatch_log" not in st.session_state:
+            st.session_state["dispatch_log"] = []
+
+        all_issues = st.session_state["issues"]
+        qualified = [i for i in all_issues
+                     if i["status"] == "Qualified for Municipal Escalation"
+                     or i["votes"] >= 50]
+
+        if not qualified:
+            st.markdown(card("""
+            <div style="text-align:center;padding:20px;">
+              <div style="font-size:48px;margin-bottom:8px;">📭</div>
+              <div style="color:#FFFFFF;font-size:18px;font-weight:700;">No qualified issues yet.</div>
+              <div style="color:#C0C0C0;margin-top:8px;">Issues need 50+ votes or Municipal Escalation status to appear here.</div>
+            </div>"""), unsafe_allow_html=True)
+        else:
+            # ── Issue multi-select ───────────────────────────────
+            st.markdown(card(f"""
+            <div style="display:flex;gap:24px;flex-wrap:wrap;">
+              <div style="text-align:center;">
+                <div style="color:#E0FF00;font-size:28px;font-weight:900;">{len(qualified)}</div>
+                <div style="color:#888;font-size:12px;">Qualified Issues</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="color:#FF6600;font-size:28px;font-weight:900;">{sum(i["votes"] for i in qualified)}</div>
+                <div style="color:#888;font-size:12px;">Total Community Votes</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="color:#00FF99;font-size:28px;font-weight:900;">{len(set(i["locality"] for i in qualified))}</div>
+                <div style="color:#888;font-size:12px;">Localities Affected</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="color:#FFFFFF;font-size:28px;font-weight:900;">{len(st.session_state["dispatch_log"])}</div>
+                <div style="color:#888;font-size:12px;">Dispatches Sent</div>
+              </div>
+            </div>"""), unsafe_allow_html=True)
+
+            issue_labels = {
+                i["id"]: f"[{i['votes']}v · {i['severity']}] {i['title'][:55]} — {i['locality']}"
+                for i in qualified
+            }
+            selected_ids = st.multiselect(
+                "Select issues to include in this dispatch bundle:",
+                options=list(issue_labels.keys()),
+                format_func=lambda x: issue_labels[x],
+                default=[qualified[0]["id"]] if qualified else [],
+                key="dispatch_select"
+            )
+
+            if not selected_ids:
+                st.markdown('<p style="color:#888;margin-top:8px;">Select at least one issue to compose a dispatch.</p>', unsafe_allow_html=True)
+            else:
+                sel_issues = [i for i in qualified if i["id"] in selected_ids]
+                localities = list(dict.fromkeys(i["locality"] for i in sel_issues))
+                categories = list(dict.fromkeys(i["category"] for i in sel_issues))
+                total_votes = sum(i["votes"] for i in sel_issues)
+                total_residents = max(len(st.session_state["users"]), 1)
+                avg_pct = round((total_votes / (total_residents * len(sel_issues))) * 100, 1)
+
+                st.markdown('<h3 style="margin-top:16px;">📋 Compose Dispatch</h3>', unsafe_allow_html=True)
+
+                # Pre-filled form
+                col_to, col_cc = st.columns(2)
+                with col_to:
+                    ward_zone = localities[0] if len(localities) == 1 else "Multiple Zones"
+                    to_email = st.text_input(
+                        "To (Ward Officer Email)",
+                        value=f"wardofficer.{localities[0].lower().replace(' ','')}.ghmc@hyderabad.gov.in",
+                        key="dispatch_to"
+                    )
+                with col_cc:
+                    cc_email = st.text_input(
+                        "CC (Commissioner / Deputy)",
+                        value="commissioner.ghmc@hyderabad.gov.in",
+                        key="dispatch_cc"
+                    )
+
+                subject_default = (
+                    f"CityFix Bundle Escalation — {len(sel_issues)} Issue{'s' if len(sel_issues)>1 else ''} "
+                    f"| {', '.join(localities[:2])}{'...' if len(localities)>2 else ''} Zone | {datetime.now().strftime('%d %b %Y')}"
+                )
+                subject = st.text_input("Subject", value=subject_default, key="dispatch_subject")
+
+                # Auto-compose body
+                issue_lines = "\n".join([
+                    f"  {idx+1}. [{iss['severity']} | {iss['category']}] {iss['title']}\n"
+                    f"     Location: {iss['locality']} ({iss['lat']}, {iss['lon']})\n"
+                    f"     Votes: {iss['votes']} | Reported: {iss['created_at'].strftime('%d %b %Y')}\n"
+                    f"     Status: {iss['status']}\n"
+                    f"     ID: {iss['id'][:12]}"
+                    for idx, iss in enumerate(sel_issues)
+                ])
+                auto_body = (
+                    f"To: GHMC Ward Officer(s), {', '.join(localities)} Zone(s)\n"
+                    f"CC: GHMC Commissioner\n\n"
+                    f"Dear Officer,\n\n"
+                    f"This is an official multi-issue escalation bundle filed through the CityFix Citizen "
+                    f"Governance Platform on {datetime.now().strftime('%d %B %Y')} on behalf of the "
+                    f"registered citizens of Hyderabad.\n\n"
+                    f"SUMMARY\n"
+                    f"{'─'*40}\n"
+                    f"Total Issues in Bundle : {len(sel_issues)}\n"
+                    f"Localities Covered     : {', '.join(localities)}\n"
+                    f"Categories             : {', '.join(categories)}\n"
+                    f"Aggregate Community Votes : {total_votes} ({avg_pct}% avg neighborhood support)\n"
+                    f"{'─'*40}\n\n"
+                    f"ISSUE DETAILS\n\n"
+                    f"{issue_lines}\n\n"
+                    f"All issues listed above have cleared the community threshold and qualify for "
+                    f"immediate on-site inspection. We respectfully request resolution within 7 working "
+                    f"days and written acknowledgement of this escalation.\n\n"
+                    f"A full PDF complaint bundle is attached to this email for official records.\n\n"
+                    f"Regards,\n"
+                    f"CityFix Platform | Citizen Governance Division\n"
+                    f"Hyderabad Civic Issue Reporting System\n"
+                    f"Generated: {datetime.now().strftime('%d %b %Y, %H:%M IST')}"
+                )
+                body = st.text_area("Email Body", value=auto_body, height=280, key="dispatch_body")
+
+                # ── PDF Bundle generator ──────────────────────────
+                def generate_bundle_pdf(issues_list, email_body_text):
+                    pdf = FPDF()
+
+                    # Cover page
+                    pdf.add_page()
+                    pdf.set_fill_color(0, 0, 0)
+                    pdf.rect(0, 0, 210, 297, "F")
+                    pdf.set_font("Helvetica", "B", 24)
+                    pdf.set_text_color(224, 255, 0)
+                    pdf.ln(30)
+                    pdf.cell(0, 12, "CityFix", ln=True, align="C")
+                    pdf.set_font("Helvetica", "B", 14)
+                    pdf.set_text_color(255, 255, 255)
+                    pdf.cell(0, 8, "Official Multi-Issue Escalation Bundle", ln=True, align="C")
+                    pdf.set_font("Helvetica", size=10)
+                    pdf.set_text_color(192, 192, 192)
+                    pdf.cell(0, 6, f"Generated: {datetime.now().strftime('%d %B %Y, %H:%M IST')}", ln=True, align="C")
+                    pdf.ln(10)
+                    # Summary box (white bg)
+                    pdf.set_fill_color(255, 255, 255)
+                    pdf.set_text_color(0, 0, 0)
+                    pdf.set_font("Helvetica", "B", 11)
+                    pdf.cell(0, 8, f"Bundle Summary", ln=True, align="C", fill=True)
+                    pdf.set_font("Helvetica", size=10)
+                    pdf.cell(0, 6, f"Total Issues: {len(issues_list)}  |  Localities: {', '.join(dict.fromkeys(i['locality'] for i in issues_list))}", ln=True, align="C", fill=True)
+                    pdf.cell(0, 6, f"Total Votes: {sum(i['votes'] for i in issues_list)}  |  Date: {datetime.now().strftime('%d %b %Y')}", ln=True, align="C", fill=True)
+                    pdf.ln(10)
+                    # Email body excerpt
+                    pdf.set_font("Helvetica", "B", 10)
+                    pdf.set_text_color(0, 0, 0)
+                    pdf.cell(0, 7, "COVER LETTER", ln=True)
+                    pdf.set_font("Helvetica", size=9)
+                    for line in email_body_text.split("\n")[:30]:
+                        try:
+                            pdf.multi_cell(0, 5, line if line.strip() else " ")
+                        except Exception:
+                            pdf.multi_cell(0, 5, line.encode("latin-1", "replace").decode("latin-1"))
+
+                    # One page per issue
+                    for idx, iss in enumerate(issues_list, 1):
+                        pdf.add_page()
+                        pdf.set_font("Helvetica", "B", 14)
+                        pdf.set_text_color(0, 0, 0)
+                        pdf.cell(0, 10, f"Issue #{idx} of {len(issues_list)}", ln=True)
+                        pdf.set_fill_color(224, 255, 0)
+                        pdf.set_text_color(0, 0, 0)
+                        pdf.set_font("Helvetica", "B", 12)
+                        safe_title = iss["title"].encode("latin-1", "replace").decode("latin-1")
+                        pdf.cell(0, 9, safe_title, ln=True, fill=True)
+                        pdf.ln(3)
+                        pdf.set_font("Helvetica", size=10)
+                        pdf.set_fill_color(255, 255, 255)
+                        fields = [
+                            ("Complaint ID", iss["id"]),
+                            ("Category", iss["category"]),
+                            ("Severity", iss["severity"]),
+                            ("Locality", iss["locality"]),
+                            ("Coordinates", f"{iss['lat']}, {iss['lon']}"),
+                            ("Status", iss["status"]),
+                            ("Community Votes", str(iss["votes"])),
+                            ("Reported On", iss["created_at"].strftime("%d %b %Y, %H:%M")),
+                            ("Reporter ID", iss["creator_id"]),
+                        ]
+                        for label, value in fields:
+                            pdf.set_font("Helvetica", "B", 10)
+                            pdf.cell(55, 7, f"{label}:", border="B")
+                            pdf.set_font("Helvetica", size=10)
+                            safe_val = str(value).encode("latin-1", "replace").decode("latin-1")
+                            pdf.cell(0, 7, safe_val, border="B", ln=True)
+                        pdf.ln(4)
+                        pdf.set_font("Helvetica", "B", 10)
+                        pdf.cell(0, 7, "Description:", ln=True)
+                        pdf.set_font("Helvetica", size=10)
+                        safe_desc = iss["description"].encode("latin-1", "replace").decode("latin-1")
+                        pdf.multi_cell(0, 6, safe_desc)
+                        pdf.ln(6)
+                        # Stamp
+                        pdf.set_fill_color(224, 255, 0)
+                        pdf.set_text_color(0, 0, 0)
+                        pdf.set_font("Helvetica", "B", 10)
+                        pdf.cell(0, 8,
+                            f"Endorsed by CityFix Citizen Platform — {iss['votes']} community votes",
+                            ln=True, fill=True, align="C"
+                        )
+
+                    return bytes(pdf.output())
+
+                # ── Action buttons ───────────────────────────────
+                st.markdown('<div style="height:8px"></div>', unsafe_allow_html=True)
+                col_pdf, col_send = st.columns(2)
+
+                with col_pdf:
+                    if st.button("📄 Generate & Preview PDF Bundle", key="btn_gen_pdf"):
+                        with st.spinner("Generating PDF bundle..."):
+                            pdf_bytes = generate_bundle_pdf(sel_issues, body)
+                            st.session_state["dispatch_pdf"] = pdf_bytes
+                            st.session_state["dispatch_pdf_issues"] = len(sel_issues)
+                        st.success(f"✅ PDF bundle ready — {len(sel_issues)} issues compiled.")
+
+                    if st.session_state.get("dispatch_pdf"):
+                        st.download_button(
+                            label=f"📥 Download PDF Bundle ({st.session_state['dispatch_pdf_issues']} Issues)",
+                            data=st.session_state["dispatch_pdf"],
+                            file_name=f"CityFix_Bundle_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+                            mime="application/pdf",
+                            key="btn_dl_pdf"
+                        )
+
+                with col_send:
+                    if st.button("🚀 Send Dispatch to Ward Officer", key="btn_send_dispatch"):
+                        with st.spinner("Connecting to mail server..."):
+                            pdf_bytes = generate_bundle_pdf(sel_issues, body)
+                            sent = False
+                            error_msg = ""
+                            try:
+                                import email as email_lib
+                                from email.mime.multipart import MIMEMultipart
+                                from email.mime.text import MIMEText
+                                from email.mime.application import MIMEApplication
+
+                                msg = MIMEMultipart()
+                                msg["From"] = "noreply.cityfix@gmail.com"
+                                msg["To"] = to_email
+                                msg["CC"] = cc_email
+                                msg["Subject"] = subject
+                                msg.attach(MIMEText(body, "plain"))
+                                attachment = MIMEApplication(pdf_bytes, _subtype="pdf")
+                                attachment.add_header("Content-Disposition", "attachment",
+                                    filename=f"CityFix_Bundle_{datetime.now().strftime('%Y%m%d')}.pdf")
+                                msg.attach(attachment)
+
+                                context = ssl.create_default_context()
+                                with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                                    server.login("noreply.cityfix@gmail.com", "placeholder_pass")
+                                    server.sendmail(msg["From"], [to_email, cc_email], msg.as_string())
+                                sent = True
+                            except Exception as e:
+                                error_msg = str(e)
+
+                        dispatch_record = {
+                            "timestamp": datetime.now(),
+                            "to": to_email,
+                            "cc": cc_email,
+                            "subject": subject,
+                            "issues": [i["title"][:40] for i in sel_issues],
+                            "issue_ids": [i["id"] for i in sel_issues],
+                            "votes_total": total_votes,
+                            "localities": localities,
+                            "sent": sent,
+                            "pdf_size_kb": round(len(pdf_bytes) / 1024, 1),
+                        }
+                        st.session_state["dispatch_log"].append(dispatch_record)
+                        st.session_state["dispatch_pdf"] = pdf_bytes
+
+                        if sent:
+                            st.success("✅ Dispatch sent successfully!")
+                        else:
+                            st.markdown(f"""
+                            <div style="background:#1A1D24;border:2px solid #E0FF00;border-radius:10px;padding:16px;margin-top:8px;">
+                              <div style="color:#E0FF00;font-weight:700;font-size:16px;margin-bottom:8px;">📬 Dispatch Logged (Mail Server Unavailable)</div>
+                              <div style="color:#C0C0C0;font-size:13px;margin-bottom:8px;">
+                                The SMTP server is not configured in this environment. Your dispatch has been <b>logged and the PDF is ready to download</b>.
+                                Forward the PDF to:
+                              </div>
+                              <div style="color:#FFFFFF;font-size:14px;font-weight:600;">📧 {to_email}</div>
+                              <div style="color:#C0C0C0;font-size:13px;">CC: {cc_email}</div>
+                              <div style="color:#555;font-size:11px;margin-top:8px;">Technical: {error_msg[:120]}</div>
+                            </div>""", unsafe_allow_html=True)
+
+                        for iss in sel_issues:
+                            add_notification(iss["creator_id"], "🏛️",
+                                f"Your issue '{iss['title'][:35]}...' was included in an official dispatch to GHMC ward officer.")
+
+                # ── Dispatch Log ──────────────────────────────────
+                if st.session_state["dispatch_log"]:
+                    st.markdown('<h3 style="margin-top:24px;">📜 Dispatch History</h3>', unsafe_allow_html=True)
+                    for rec in reversed(st.session_state["dispatch_log"]):
+                        status_icon = "✅" if rec["sent"] else "📬"
+                        status_label = "Sent" if rec["sent"] else "Logged (Download Ready)"
+                        status_col = "#00FF99" if rec["sent"] else "#E0FF00"
+                        issues_preview = "<br>".join([f"• {t}" for t in rec["issues"][:4]])
+                        if len(rec["issues"]) > 4:
+                            issues_preview += f"<br><span style='color:#555'>+ {len(rec['issues'])-4} more</span>"
+
+                        st.markdown(card(f"""
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+                          <div style="flex:1;min-width:220px;">
+                            <div style="color:#FFFFFF;font-weight:700;margin-bottom:4px;">{rec["subject"][:60]}...</div>
+                            <div style="color:#888;font-size:12px;margin-bottom:8px;">
+                              📧 {rec["to"]} &nbsp;|&nbsp; 📋 CC: {rec["cc"]}<br>
+                              🕐 {rec["timestamp"].strftime("%d %b %Y, %H:%M")} &nbsp;|&nbsp;
+                              📍 {", ".join(rec["localities"][:3])} &nbsp;|&nbsp;
+                              👍 {rec["votes_total"]} votes &nbsp;|&nbsp;
+                              📎 {rec["pdf_size_kb"]} KB PDF
+                            </div>
+                            <div style="color:#C0C0C0;font-size:12px;line-height:1.8;">{issues_preview}</div>
+                          </div>
+                          <div style="text-align:right;flex-shrink:0;">
+                            <div style="font-size:22px;">{status_icon}</div>
+                            <div style="color:{status_col};font-size:12px;font-weight:700;">{status_label}</div>
+                            <div style="color:#888;font-size:11px;">{len(rec["issues"])} issue{'s' if len(rec['issues'])!=1 else ''}</div>
+                          </div>
+                        </div>"""), unsafe_allow_html=True)
+
+    # TAB 4: Helpline Directory
     with tab_helpline:
         st.markdown('<h3>📞 Municipal Helpline Directory</h3>', unsafe_allow_html=True)
         helplines = [
