@@ -40,10 +40,10 @@ st.markdown("""
 <style>
 body, .stApp { background-color: #0E1117 !important; color: #FFFFFF !important; }
 .stButton > button {
-  background-color: #E0FF00 !important; color: #000000 !important;
+  background-color: #00ff26 !important; color: #000000 !important;
   border: none; border-radius: 8px; font-weight: 700;
 }
-.stButton > button:hover { background-color: #c8e600 !important; }
+.stButton > button:hover { background-color: #00cc1e !important; }
 .stProgress > div > div { background-color: #E0FF00 !important; }
 h1, h2, h3 { color: #FFFFFF !important; }
 p, label, .stMarkdown { color: #C0C0C0 !important; }
