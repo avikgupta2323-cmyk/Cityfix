@@ -46,7 +46,7 @@ body, .stApp { background-color: #0E1117 !important; color: #FFFFFF !important; 
 .stButton > button:hover { background-color: #00cc1e !important; }
 .stProgress > div > div { background-color: #E0FF00 !important; }
 h1, h2, h3 { color: #FFFFFF !important; }
-p, label, .stMarkdown { color: #C0C0C0 !important; }
+p, label, .stMarkdown { color: #000000 !important; background: transparent !important; }
 .stTextInput > div > div > input {
   background-color: #1A1D24 !important;
   color: #FFFFFF !important;
