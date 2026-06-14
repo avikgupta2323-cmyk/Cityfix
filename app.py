@@ -177,7 +177,7 @@ def img_html(issue):
     if issue.get("image_b64"):
         return f'<img src="data:image/jpeg;base64,{issue["image_b64"]}" style="width:100%;border-radius:8px;max-height:200px;object-fit:cover;">'
     elif issue.get("image_url"):
-        return f'<img src="{issue["image_url"]}" style="width:100%;border-radius:8px;max-height:200px;object-fit:cover;" onerror="this.style.display=\'none\'">'
+        return f'<img src="{issue["image_url"]}" style="width:100%;border-radius:8px;max-height:200px;object-fit:cover;">'
     else:
         return '<div style="width:100%;height:120px;background:#2A2A2A;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#555;">No Image</div>'
 
