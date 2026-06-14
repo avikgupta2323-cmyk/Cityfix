@@ -330,12 +330,17 @@ def page_login():
 
             st.markdown('<div style="text-align:center;margin:12px 0;color:#555;">— or —</div>', unsafe_allow_html=True)
 
-            st.markdown("""
-            <a href="https://accounts.google.com/o/oauth2/v2/auth" target="_blank"
-               style="display:block;text-align:center;background:#1A1D24;color:#FFFFFF;border:1px solid #4285F4;
-               padding:10px;border-radius:8px;text-decoration:none;font-weight:600;margin-bottom:8px;">
-               🔵 Continue with Google
-            </a>""", unsafe_allow_html=True)
+            if st.button("🔵 Continue with Google", key="btn_google", use_container_width=True):
+                st.markdown("""
+                <div style="background:#1A1D24;border:1px solid #4285F4;border-radius:8px;padding:12px 16px;margin-top:4px;">
+                  <div style="color:#4285F4;font-weight:700;margin-bottom:4px;">Google OAuth not configured</div>
+                  <div style="color:#C0C0C0;font-size:13px;">
+                    To enable Google login, register a Google OAuth 2.0 app at
+                    <b>console.cloud.google.com</b>, set the redirect URI, and add
+                    <b>GOOGLE_CLIENT_ID</b> and <b>GOOGLE_CLIENT_SECRET</b> as environment secrets.<br><br>
+                    For now, use <b>Sign Up</b> or the <b>Demo Account</b> button below.
+                  </div>
+                </div>""", unsafe_allow_html=True)
 
             if st.button("🎮 Use Demo Account", key="btn_demo"):
                 demo_id = "demo_" + str(uuid.uuid4())[:8]
