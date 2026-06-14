@@ -69,6 +69,7 @@ p, label, .stMarkdown { color: #000000 !important; background: transparent !impo
   background-color: #E0FF00 !important;
   color: #000000 !important;
 }
+.st-emotion-cache-u1kubd { background-color: #60fcdb !important; }
 .stSidebar { background-color: #0E1117 !important; }
 .stSidebar .stButton > button {
   width: 100% !important;
