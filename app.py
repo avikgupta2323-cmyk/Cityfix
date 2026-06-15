@@ -39,68 +39,105 @@ for key, val in defaults.items():
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-body, .stApp { background-color: #0E1117 !important; color: #FFFFFF !important; }
+@keyframes fadeSlideIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes glowText { 0%,100%{text-shadow:0 0 8px #E0FF00,0 0 20px #E0FF00;} 50%{text-shadow:0 0 18px #E0FF00,0 0 40px #E0FF00,0 0 70px #E0FF00;} }
+@keyframes neonGreenPulse { 0%,100%{box-shadow:0 0 8px #00FF41,0 0 16px #00FF41;} 50%{box-shadow:0 0 22px #00FF41,0 0 44px #00FF41,0 0 66px #00FF41;} }
+@keyframes neonYellowPulse { 0%,100%{box-shadow:0 0 8px #E0FF00,0 0 16px #E0FF00;} 50%{box-shadow:0 0 22px #E0FF00,0 0 44px #E0FF00;} }
+@keyframes borderScan { 0%{border-color:#00FF41;} 50%{border-color:#E0FF00;} 100%{border-color:#00FF41;} }
+@keyframes urgencyPulse { 0%,100%{box-shadow:0 0 8px rgba(255,30,30,0.4);} 50%{box-shadow:0 0 24px rgba(255,30,30,0.9);} }
+@keyframes flashBanner { 0%,100%{background:#00FF99;color:#003322;} 50%{background:#003322;color:#00FF99;} }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
+@keyframes scanline { 0%{background-position:0 0;} 100%{background-position:0 100%;} }
+
+body, .stApp { background-color: #080B12 !important; color: #FFFFFF !important; }
+.block-container { animation: fadeSlideIn 0.45s ease; }
+
+/* ── Buttons ── */
 .stButton > button {
-  background-color: #00ff26 !important; color: #000000 !important;
-  border: none; border-radius: 8px; font-weight: 700;
+  background: linear-gradient(135deg, #00FF41 0%, #00CC33 100%) !important;
+  color: #000000 !important; border: none !important; border-radius: 8px !important;
+  font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.4px !important;
+  transition: all 0.22s ease !important;
 }
-.stButton > button:hover { background-color: #00cc1e !important; }
-.stProgress > div > div { background-color: #E0FF00 !important; }
-h1, h3 { color: #FFFFFF !important; }
-h2 { color: #ffffff !important; }
-p, label, .stMarkdown { color: #ffffff !important; background: transparent !important; }
+.stButton > button:hover {
+  background: linear-gradient(135deg, #E0FF00 0%, #B8D400 100%) !important;
+  color: #000000 !important; transform: translateY(-2px) !important;
+  box-shadow: 0 0 18px rgba(224,255,0,0.55) !important;
+}
+.stButton > button:active { transform: translateY(0px) !important; }
+
+/* ── Headings ── */
+h1 { color: #E0FF00 !important; animation: glowText 3s ease-in-out infinite; }
+h2 { color: #FFFFFF !important; }
+h3 { color: #E0FF00 !important; }
+p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !important; }
+.element-container { animation: fadeSlideIn 0.4s ease; }
+
+/* ── Progress ── */
+.stProgress > div > div { background: linear-gradient(90deg, #00FF41, #E0FF00) !important; }
+
+/* ── Inputs ── */
 .stTextInput > div > div > input {
-  background-color: #1A1D24 !important;
-  color: #FFFFFF !important;
-  border: 1px solid #E0FF00 !important;
+  background-color: #11151F !important; color: #FFFFFF !important;
+  border: 1px solid #E0FF00 !important; border-radius: 8px !important;
+  transition: box-shadow 0.2s ease !important;
 }
-.stSelectbox > div > div {
-  background-color: #1A1D24 !important;
-  color: #FFFFFF !important;
-}
+.stTextInput > div > div > input:focus { box-shadow: 0 0 14px rgba(224,255,0,0.4) !important; }
 .stTextArea > div > div > textarea {
-  background-color: #1A1D24 !important;
-  color: #FFFFFF !important;
-  border: 1px solid #E0FF00 !important;
+  background-color: #11151F !important; color: #FFFFFF !important;
+  border: 1px solid #E0FF00 !important; border-radius: 8px !important;
 }
-.stTabs [data-baseweb="tab"] {
-  background-color: #1A1D24 !important;
-  color: #C0C0C0 !important;
+.stSelectbox > div > div { background-color: #11151F !important; color: #FFFFFF !important; border: 1px solid #333 !important; border-radius: 8px !important; }
+.stNumberInput > div > div > input { background-color: #11151F !important; color: #FFFFFF !important; border: 1px solid #333 !important; }
+
+/* ── Tabs ── */
+.stTabs [data-baseweb="tab"] { background-color: #11151F !important; color: #888 !important; border-radius: 6px 6px 0 0 !important; transition: all 0.2s ease !important; }
+.stTabs [aria-selected="true"] { background: linear-gradient(135deg, #E0FF00, #B8D400) !important; color: #000000 !important; font-weight: 700 !important; }
+
+/* ── Sidebar ── */
+.stSidebar { background: linear-gradient(180deg, #080B12 0%, #0D1020 100%) !important; border-right: 1px solid #1A1D24 !important; }
+.stSidebar .stButton > button {
+  width: 100% !important; text-align: left !important;
+  background: transparent !important; color: #C0C0C0 !important;
+  border: 1px solid #1A1D24 !important; margin-bottom: 4px !important;
+  border-radius: 8px !important; transition: all 0.2s ease !important;
+  animation: none !important;
 }
-.stTabs [aria-selected="true"] {
-  background-color: #E0FF00 !important;
-  color: #000000 !important;
+.stSidebar .stButton > button:hover {
+  background: linear-gradient(135deg, #E0FF00, #B8D400) !important;
+  color: #000000 !important; border-color: #E0FF00 !important;
+  box-shadow: 0 0 10px rgba(224,255,0,0.3) !important; transform: none !important;
 }
+
+/* ── Alert boxes ── */
+.stSuccess > div { border-left: 4px solid #00FF41 !important; background: rgba(0,255,65,0.08) !important; }
+.stInfo > div { border-left: 4px solid #00B4FF !important; background: rgba(0,180,255,0.08) !important; }
+.stWarning > div { border-left: 4px solid #E0FF00 !important; background: rgba(224,255,0,0.08) !important; }
+.stError > div { border-left: 4px solid #FF3232 !important; background: rgba(255,50,50,0.08) !important; }
+[data-testid="stAlertContainer"] p, [data-testid="stAlertContainer"] { color: #FFFFFF !important; }
+
+/* ── Download button ── */
+.stDownloadButton > button {
+  background: linear-gradient(135deg, #E0FF00, #B8D400) !important;
+  color: #000000 !important; font-weight: 700 !important; border-radius: 8px !important;
+  box-shadow: 0 0 12px rgba(224,255,0,0.25) !important;
+}
+.stDownloadButton > button:hover { animation: neonYellowPulse 0.9s ease infinite; transform: translateY(-2px) !important; }
+
+/* ── Misc ── */
 .st-emotion-cache-u1kubd { background-color: transparent !important; color: #ffffff !important; }
 .st-emotion-cache-1anq8dj { background-color: #26bd26 !important; }
 button.st-as.st-at.st-au { background-color: #c4c726 !important; }
-.stSidebar { background-color: #0E1117 !important; }
-.stSidebar .stButton > button {
-  width: 100% !important;
-  text-align: left !important;
-  background-color: #1A1D24 !important;
-  color: #FFFFFF !important;
-  border: 1px solid #333 !important;
-  margin-bottom: 4px !important;
-}
-.stSidebar .stButton > button:hover {
-  background-color: #E0FF00 !important;
-  color: #000000 !important;
-  border-color: #E0FF00 !important;
-}
-@keyframes urgencyPulse {
-  0%   { box-shadow: 0 0 8px rgba(255,30,30,0.4); }
-  50%  { box-shadow: 0 0 24px rgba(255,30,30,0.9); }
-  100% { box-shadow: 0 0 8px rgba(255,30,30,0.4); }
-}
 .urgent-card { animation: urgencyPulse 1.5s infinite; border: 1px solid #FF1E1E !important; }
-@keyframes flashBanner {
-  0%,100%{background:#00FF99;color:#003322;}
-  50%{background:#003322;color:#00FF99;}
-}
 .flash-banner { animation: flashBanner 1s infinite; padding:12px 20px; border-radius:8px; font-weight:700; text-align:center; font-size:18px; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
-.loader { width:20px;height:20px;background:#E0FF00;border-radius:50%;animation:pulse 1.2s infinite;margin:20px auto; }
+.loader { width:20px; height:20px; background:#E0FF00; border-radius:50%; animation:pulse 1.2s infinite; margin:20px auto; }
+[data-testid="stRadio"] label, [data-testid="stCheckbox"] label { color: #FFFFFF !important; }
+[data-testid="stMetricLabel"] p { color: #888 !important; }
+[data-testid="stMetricValue"] { color: #E0FF00 !important; }
+.stCaption, [data-testid="stCaption"] { color: #888 !important; }
+[data-testid="stCaption"] p { color: #888 !important; }
+.stCodeBlock, [data-testid="stCode"] { border: 1px solid #E0FF00 !important; border-radius: 8px !important; background: #11151F !important; }
+code { color: #E0FF00 !important; background: transparent !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -167,15 +204,8 @@ def status_badge(status):
 
 def card(content_html, urgent=False):
     extra_class = ' class="urgent-card"' if urgent else ''
-    extra_style = "" if urgent else "border: 1px solid #E0FF00;"
-    return f"""<div{extra_class} style="
-      background: #1A1D24;
-      {extra_style}
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(224, 255, 0, 0.15);
-      padding: 20px;
-      margin-bottom: 16px;
-    ">{content_html}</div>"""
+    border = "" if urgent else "border:1px solid #E0FF00;"
+    return f'<div{extra_class} style="background:#1A1D24;{border}border-radius:10px;box-shadow:0 0 12px rgba(224,255,0,0.15);padding:20px;margin-bottom:16px;">{content_html}</div>'
 
 
 def img_html(issue):
@@ -185,6 +215,11 @@ def img_html(issue):
         return f'<img src="{issue["image_url"]}" style="width:100%;border-radius:8px;max-height:200px;object-fit:cover;">'
     else:
         return '<div style="width:100%;height:120px;background:#2A2A2A;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#555;">No Image</div>'
+
+
+def safe_text(t):
+    """Strip non-Latin-1 characters so fpdf2 Helvetica doesn't crash."""
+    return str(t).encode('latin-1', 'replace').decode('latin-1')
 
 
 def add_notification(user_id, icon, message):
@@ -440,77 +475,30 @@ def page_login():
                 lon_su = st.session_state["signup_geo_lon"]
                 # ─────────────────────────────────────────────────────
 
-                if st.button("Send OTP", key="btn_send_otp"):
+                if st.button("✅ Create Account", key="btn_create_account", use_container_width=True):
+                    existing_emails = [u["email"] for u in st.session_state["users"].values()]
                     if not name_su or not email_su or not pass_su:
-                        st.error("Please fill all fields.")
+                        st.error("Please fill in all fields.")
                     elif len(pass_su) < 6:
                         st.error("Password must be at least 6 characters.")
+                    elif email_su in existing_emails:
+                        st.error("An account with this email already exists. Please log in.")
                     else:
-                        otp = str(random.randint(100000, 999999))
-                        st.session_state["pending_otp"] = otp
-                        st.session_state["signup_data"] = {
-                            "name": name_su, "email": email_su,
-                            "password": pass_su, "lat": lat_su, "lon": lon_su
-                        }
-                        # Try sending OTP via SMTP
-                        sent = False
-                        try:
-                            context = ssl.create_default_context()
-                            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-                                server.login("noreply.cityfix@gmail.com", "placeholder")
-                                server.sendmail("noreply.cityfix@gmail.com", email_su,
-                                    f"Subject: CityFix OTP\n\nYour OTP is: {otp}")
-                            sent = True
-                        except Exception:
-                            sent = False
-
-                        if not sent:
-                            st.markdown(f"""
-                            <div style="background:#1A1D24;border:2px solid #E0FF00;border-radius:8px;padding:14px;margin-top:8px;">
-                              <span style="color:#E0FF00;font-weight:700;">Mail server busy.</span>
-                              <span style="color:#C0C0C0;"> Please try requesting your OTP again in a few moments.</span><br>
-                              <span style="color:#888;font-size:12px;">(Dev mode: OTP is <b style="color:#E0FF00">{otp}</b>)</span>
-                            </div>""", unsafe_allow_html=True)
-                        st.session_state["signup_step"] = "otp"
-                        st.rerun()
-
-            elif st.session_state["signup_step"] == "otp":
-                data = st.session_state["signup_data"]
-                st.markdown(f'<p style="color:#C0C0C0;">OTP sent to <b>{data["email"]}</b></p>', unsafe_allow_html=True)
-                otp_input = st.text_input("Enter 6-digit OTP", key="otp_field", placeholder="123456", max_chars=6)
-
-                if st.button("Verify & Create Account", key="btn_verify"):
-                    if otp_input == st.session_state["pending_otp"]:
-                        locality = get_locality(data["lat"], data["lon"])
+                        locality = get_locality(lat_su, lon_su)
                         uid = str(uuid.uuid4())
                         new_user = {
-                            "id": uid, "name": data["name"], "email": data["email"],
-                            "password": data["password"], "lat": data["lat"], "lon": data["lon"],
+                            "id": uid, "name": name_su, "email": email_su,
+                            "password": pass_su, "lat": lat_su, "lon": lon_su,
                             "locality": locality, "civic_points": 0,
                             "reports": [], "created_at": datetime.now()
                         }
                         st.session_state["users"][uid] = new_user
                         st.session_state["current_user"] = new_user
-                        st.session_state["signup_step"] = "form"
-                        st.session_state["pending_otp"] = None
-
-                        placeholder = st.empty()
-                        placeholder.markdown(f"""
-                        <div style="background:#1A1D24;border:2px solid #00FF99;border-radius:10px;padding:24px;text-align:center;">
-                          <div style="font-size:32px;margin-bottom:8px;">🎉</div>
-                          <div style="color:#00FF99;font-size:20px;font-weight:700;">Welcome to the team, {data["name"]}!</div>
-                          <div style="color:#C0C0C0;margin-top:8px;">Your coordinates place you in <b style="color:#E0FF00">{locality}</b>.</div>
-                          <div style="color:#888;margin-top:4px;">Gathering data for your micro-locality...</div>
-                        </div>""", unsafe_allow_html=True)
-                        time.sleep(2)
-                        placeholder.empty()
+                        _ph = st.empty()
+                        _ph.markdown(f'<div style="background:#1A1D24;border:2px solid #00FF41;border-radius:10px;padding:24px;text-align:center;"><div style="font-size:32px;margin-bottom:8px;">🎉</div><div style="color:#00FF41;font-size:20px;font-weight:700;">Welcome to CityFix, {name_su}!</div><div style="color:#C0C0C0;margin-top:8px;">Your micro-locality: <b style="color:#E0FF00">{locality}</b></div></div>', unsafe_allow_html=True)
+                        time.sleep(1.5)
+                        _ph.empty()
                         nav_to("home")
-                    else:
-                        st.error("❌ Incorrect OTP. Please try again.")
-
-                if st.button("← Back", key="btn_back_otp"):
-                    st.session_state["signup_step"] = "form"
-                    st.rerun()
 
 
 # ─────────────────────────────────────────────
@@ -1461,26 +1449,26 @@ def page_share():
             pdf.add_page()
             pdf.set_font("Helvetica", "B", 20)
             pdf.set_text_color(0, 0, 0)
-            pdf.cell(0, 10, "CityFix — Official Complaint Document", ln=True, align="C")
+            pdf.cell(0, 10, "CityFix - Official Complaint Document", ln=True, align="C")
             pdf.set_font("Helvetica", size=10)
-            pdf.cell(0, 6, f"Complaint ID: {iss['id']}", ln=True)
-            pdf.cell(0, 6, f"Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}", ln=True)
+            pdf.cell(0, 6, safe_text(f"Complaint ID: {iss['id']}"), ln=True)
+            pdf.cell(0, 6, safe_text(f"Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}"), ln=True)
             pdf.ln(4)
             pdf.set_font("Helvetica", "B", 13)
-            pdf.cell(0, 8, iss["title"], ln=True)
+            pdf.cell(0, 8, safe_text(iss["title"]), ln=True)
             pdf.set_font("Helvetica", size=11)
-            pdf.cell(0, 6, f"Category: {iss['category']}  |  Severity: {iss['severity']}", ln=True)
-            pdf.cell(0, 6, f"Locality: {iss['locality']}", ln=True)
-            pdf.cell(0, 6, f"Coordinates: {iss['lat']}, {iss['lon']}", ln=True)
-            pdf.cell(0, 6, f"Status: {iss['status']}", ln=True)
-            pdf.cell(0, 6, f"Community Votes: {iss['votes']}", ln=True)
+            pdf.cell(0, 6, safe_text(f"Category: {iss['category']}  |  Severity: {iss['severity']}"), ln=True)
+            pdf.cell(0, 6, safe_text(f"Locality: {iss['locality']}"), ln=True)
+            pdf.cell(0, 6, safe_text(f"Coordinates: {iss['lat']}, {iss['lon']}"), ln=True)
+            pdf.cell(0, 6, safe_text(f"Status: {iss['status']}"), ln=True)
+            pdf.cell(0, 6, safe_text(f"Community Votes: {iss['votes']}"), ln=True)
             pdf.ln(4)
-            pdf.multi_cell(0, 6, f"Description: {iss['description']}")
+            pdf.multi_cell(0, 6, safe_text(f"Description: {iss['description']}"))
             pdf.ln(6)
             pdf.set_font("Helvetica", "B", 12)
             pdf.set_fill_color(224, 255, 0)
             pdf.set_text_color(0, 0, 0)
-            pdf.cell(0, 10, f"Endorsed via Community Consensus ({len(st.session_state['users'])} Registered Citizens)", ln=True, fill=True, align="C")
+            pdf.cell(0, 10, safe_text(f"Endorsed via Community Consensus ({len(st.session_state['users'])} Registered Citizens)"), ln=True, fill=True, align="C")
             return bytes(pdf.output())
 
         pdf_bytes = generate_pdf(issue)
