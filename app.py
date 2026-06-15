@@ -97,15 +97,19 @@ p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !impo
 }
 
 /* ── Tabs ────────────────────────────────────────────────── */
-[data-baseweb="tab-list"] { background: transparent !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important; gap: 4px !important; }
+[data-baseweb="tab-list"] { background: transparent !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important; gap: 6px !important; padding-bottom: 0 !important; }
 .stTabs [data-baseweb="tab"] {
   background: transparent !important; color: #666 !important;
-  border-bottom: 2px solid transparent !important; border-radius: 0 !important;
-  font-weight: 600 !important; transition: color 0.2s ease !important;
+  border-bottom: 2px solid transparent !important; border-radius: 6px 6px 0 0 !important;
+  font-weight: 600 !important; font-size: 13px !important;
+  transition: color 0.18s ease, background 0.18s ease !important;
+  padding: 8px 16px !important;
 }
+.stTabs [data-baseweb="tab"]:hover { color: #CCCCCC !important; }
 .stTabs [aria-selected="true"] {
-  color: #D4FF00 !important; border-bottom: 2px solid #D4FF00 !important;
-  background: transparent !important;
+  background: #D4FF00 !important; color: #000000 !important;
+  font-weight: 800 !important; border-bottom: 2px solid #D4FF00 !important;
+  letter-spacing: 0.2px !important;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────── */
@@ -241,6 +245,22 @@ def safe_text(t):
     return str(t).encode('latin-1', 'replace').decode('latin-1')
 
 
+@st.cache_resource(show_spinner=False)
+def fetch_b64(url: str) -> str | None:
+    """Download an image URL and return it as a base64 string (cached forever)."""
+    try:
+        import requests as _req
+        r = _req.get(url, timeout=10,
+                     headers={"User-Agent": "Mozilla/5.0 CityFix/1.0"},
+                     allow_redirects=True)
+        ct = r.headers.get("content-type", "")
+        if r.status_code == 200 and ct.startswith("image"):
+            return base64.b64encode(r.content).decode()
+    except Exception:
+        pass
+    return None
+
+
 def add_notification(user_id, icon, message):
     if user_id not in st.session_state["notifications"]:
         st.session_state["notifications"][user_id] = []
@@ -276,8 +296,8 @@ if not st.session_state["issues_loaded"]:
             "creator_id": "mock_user_1",
             "description": "Massive pothole right at the exit of Hitech City metro station causing vehicles to swerve dangerously.",
             "created_at": datetime.now() - timedelta(hours=6),
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Pothole_on_a_road_in_India.jpg/640px-Pothole_on_a_road_in_India.jpg",
-            "image_b64": None,
+            "image_url": "https://source.unsplash.com/640x400/?pothole,road,damage",
+            "image_b64": fetch_b64("https://source.unsplash.com/640x400/?pothole,road,damage"),
         },
         {
             "id": str(uuid.uuid4()),
@@ -288,8 +308,8 @@ if not st.session_state["issues_loaded"]:
             "creator_id": "mock_user_2",
             "description": "Garbage bins overflowing since 3 days. Stench and health hazard for nearby residents.",
             "created_at": datetime.now() - timedelta(hours=18),
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Garbage_pile.jpg/640px-Garbage_pile.jpg",
-            "image_b64": None,
+            "image_url": "https://source.unsplash.com/640x400/?garbage,waste,dump",
+            "image_b64": fetch_b64("https://source.unsplash.com/640x400/?garbage,waste,dump"),
         },
         {
             "id": str(uuid.uuid4()),
@@ -300,8 +320,8 @@ if not st.session_state["issues_loaded"]:
             "creator_id": "mock_user_3",
             "description": "Entire stretch of 200m near DLF Gate 2 has no working streetlights. Very unsafe at night.",
             "created_at": datetime.now() - timedelta(hours=30),
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Broken_street_light.jpg/480px-Broken_street_light.jpg",
-            "image_b64": None,
+            "image_url": "https://source.unsplash.com/640x400/?streetlight,dark,street,night",
+            "image_b64": fetch_b64("https://source.unsplash.com/640x400/?streetlight,dark,street,night"),
         },
         {
             "id": str(uuid.uuid4()),
@@ -312,8 +332,8 @@ if not st.session_state["issues_loaded"]:
             "creator_id": "mock_user_4",
             "description": "Underground pipeline burst causing water wastage and road damage near bus stop.",
             "created_at": datetime.now() - timedelta(hours=72),
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Water_leak.jpg/480px-Water_leak.jpg",
-            "image_b64": None,
+            "image_url": "https://source.unsplash.com/640x400/?water,leak,pipe,flood",
+            "image_b64": fetch_b64("https://source.unsplash.com/640x400/?water,leak,pipe,flood"),
         },
     ]
     st.session_state["issues"] = mock_issues
