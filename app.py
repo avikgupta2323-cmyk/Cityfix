@@ -39,105 +39,124 @@ for key, val in defaults.items():
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-@keyframes fadeSlideIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-@keyframes glowText { 0%,100%{text-shadow:0 0 8px #E0FF00,0 0 20px #E0FF00;} 50%{text-shadow:0 0 18px #E0FF00,0 0 40px #E0FF00,0 0 70px #E0FF00;} }
-@keyframes neonGreenPulse { 0%,100%{box-shadow:0 0 8px #00FF41,0 0 16px #00FF41;} 50%{box-shadow:0 0 22px #00FF41,0 0 44px #00FF41,0 0 66px #00FF41;} }
-@keyframes neonYellowPulse { 0%,100%{box-shadow:0 0 8px #E0FF00,0 0 16px #E0FF00;} 50%{box-shadow:0 0 22px #E0FF00,0 0 44px #E0FF00;} }
-@keyframes borderScan { 0%{border-color:#00FF41;} 50%{border-color:#E0FF00;} 100%{border-color:#00FF41;} }
-@keyframes urgencyPulse { 0%,100%{box-shadow:0 0 8px rgba(255,30,30,0.4);} 50%{box-shadow:0 0 24px rgba(255,30,30,0.9);} }
-@keyframes flashBanner { 0%,100%{background:#00FF99;color:#003322;} 50%{background:#003322;color:#00FF99;} }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
-@keyframes scanline { 0%{background-position:0 0;} 100%{background-position:0 100%;} }
+/* ── Keyframes ─────────────────────────────────────────── */
+@keyframes fadeIn   { from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);} }
+@keyframes glow     { 0%,100%{text-shadow:0 0 14px rgba(212,255,0,0.5);}50%{text-shadow:0 0 28px rgba(212,255,0,0.9),0 0 55px rgba(212,255,0,0.35);} }
+@keyframes amberGlow{ 0%,100%{filter:drop-shadow(0 0 12px rgba(255,184,0,0.65));}50%{filter:drop-shadow(0 0 32px rgba(255,184,0,1)) drop-shadow(0 0 55px rgba(255,140,0,0.5));} }
+@keyframes dotPulse { 0%,80%,100%{transform:scale(0.3);opacity:0.25;}40%{transform:scale(1);opacity:1;} }
+@keyframes urgencyPulse { 0%,100%{box-shadow:0 0 8px rgba(255,50,50,0.4);}50%{box-shadow:0 0 24px rgba(255,50,50,0.9);} }
+@keyframes flashBanner { 0%,100%{background:#00FF41;color:#003322;}50%{background:#003322;color:#00FF41;} }
+@keyframes spinnerPulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(1.25)} }
 
-body, .stApp { background-color: #080B12 !important; color: #FFFFFF !important; }
-.block-container { animation: fadeSlideIn 0.45s ease; }
+/* ── Base ────────────────────────────────────────────────── */
+body, .stApp { background-color: #0A0A0A !important; color: #FFFFFF !important; }
+.block-container { animation: fadeIn 0.4s ease; padding-top: 0.5rem !important; }
+.element-container { animation: fadeIn 0.35s ease; }
 
-/* ── Buttons ── */
+/* ── Typography ──────────────────────────────────────────── */
+h1 { color: #D4FF00 !important; font-weight: 800 !important; letter-spacing: -0.5px !important; animation: glow 4s ease-in-out infinite; }
+h2 { color: #FFFFFF !important; font-weight: 700 !important; }
+h3 { color: #D4FF00 !important; font-weight: 600 !important; }
+p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !important; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
 .stButton > button {
-  background: linear-gradient(135deg, #00FF41 0%, #00CC33 100%) !important;
-  color: #000000 !important; border: none !important; border-radius: 8px !important;
+  background: #D4FF00 !important; color: #000000 !important;
+  border: none !important; border-radius: 10px !important;
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.4px !important;
-  transition: all 0.22s ease !important;
+  transition: all 0.2s ease !important; padding: 0.45rem 1.25rem !important;
 }
 .stButton > button:hover {
-  background: linear-gradient(135deg, #E0FF00 0%, #B8D400 100%) !important;
-  color: #000000 !important; transform: translateY(-2px) !important;
-  box-shadow: 0 0 18px rgba(224,255,0,0.55) !important;
+  background: #C0EC00 !important; color: #000000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 22px rgba(212,255,0,0.38) !important;
 }
-.stButton > button:active { transform: translateY(0px) !important; }
+.stButton > button:active { transform: translateY(0) !important; }
 
-/* ── Headings ── */
-h1 { color: #E0FF00 !important; animation: glowText 3s ease-in-out infinite; }
-h2 { color: #FFFFFF !important; }
-h3 { color: #E0FF00 !important; }
-p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !important; }
-.element-container { animation: fadeSlideIn 0.4s ease; }
-
-/* ── Progress ── */
-.stProgress > div > div { background: linear-gradient(90deg, #00FF41, #E0FF00) !important; }
-
-/* ── Inputs ── */
+/* ── Inputs ──────────────────────────────────────────────── */
 .stTextInput > div > div > input {
-  background-color: #11151F !important; color: #FFFFFF !important;
-  border: 1px solid #E0FF00 !important; border-radius: 8px !important;
-  transition: box-shadow 0.2s ease !important;
+  background: #111111 !important; color: #FFFFFF !important;
+  border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
+  font-size: 14px !important; transition: border-color 0.2s, box-shadow 0.2s !important;
 }
-.stTextInput > div > div > input:focus { box-shadow: 0 0 14px rgba(224,255,0,0.4) !important; }
+.stTextInput > div > div > input:focus {
+  border-color: #D4FF00 !important; box-shadow: 0 0 0 3px rgba(212,255,0,0.1) !important;
+}
 .stTextArea > div > div > textarea {
-  background-color: #11151F !important; color: #FFFFFF !important;
-  border: 1px solid #E0FF00 !important; border-radius: 8px !important;
+  background: #111111 !important; color: #FFFFFF !important;
+  border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
 }
-.stSelectbox > div > div { background-color: #11151F !important; color: #FFFFFF !important; border: 1px solid #333 !important; border-radius: 8px !important; }
-.stNumberInput > div > div > input { background-color: #11151F !important; color: #FFFFFF !important; border: 1px solid #333 !important; }
+.stTextArea > div > div > textarea:focus { border-color: #D4FF00 !important; }
+.stSelectbox > div > div {
+  background: #111111 !important; color: #FFFFFF !important;
+  border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
+}
+.stNumberInput > div > div > input {
+  background: #111111 !important; color: #FFFFFF !important;
+  border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
+}
 
-/* ── Tabs ── */
-.stTabs [data-baseweb="tab"] { background-color: #11151F !important; color: #888 !important; border-radius: 6px 6px 0 0 !important; transition: all 0.2s ease !important; }
-.stTabs [aria-selected="true"] { background: linear-gradient(135deg, #E0FF00, #B8D400) !important; color: #000000 !important; font-weight: 700 !important; }
+/* ── Tabs ────────────────────────────────────────────────── */
+[data-baseweb="tab-list"] { background: transparent !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important; gap: 4px !important; }
+.stTabs [data-baseweb="tab"] {
+  background: transparent !important; color: #666 !important;
+  border-bottom: 2px solid transparent !important; border-radius: 0 !important;
+  font-weight: 600 !important; transition: color 0.2s ease !important;
+}
+.stTabs [aria-selected="true"] {
+  color: #D4FF00 !important; border-bottom: 2px solid #D4FF00 !important;
+  background: transparent !important;
+}
 
-/* ── Sidebar ── */
-.stSidebar { background: linear-gradient(180deg, #080B12 0%, #0D1020 100%) !important; border-right: 1px solid #1A1D24 !important; }
+/* ── Sidebar ─────────────────────────────────────────────── */
+.stSidebar { background: #070707 !important; border-right: 1px solid rgba(255,255,255,0.05) !important; }
 .stSidebar .stButton > button {
   width: 100% !important; text-align: left !important;
-  background: transparent !important; color: #C0C0C0 !important;
-  border: 1px solid #1A1D24 !important; margin-bottom: 4px !important;
-  border-radius: 8px !important; transition: all 0.2s ease !important;
-  animation: none !important;
+  background: transparent !important; color: #777 !important;
+  border: none !important; border-radius: 8px !important; margin-bottom: 2px !important;
+  font-size: 13px !important; font-weight: 500 !important; padding: 0.45rem 0.75rem !important;
+  transition: all 0.15s ease !important; animation: none !important;
+  transform: none !important; box-shadow: none !important;
 }
 .stSidebar .stButton > button:hover {
-  background: linear-gradient(135deg, #E0FF00, #B8D400) !important;
-  color: #000000 !important; border-color: #E0FF00 !important;
-  box-shadow: 0 0 10px rgba(224,255,0,0.3) !important; transform: none !important;
+  background: rgba(212,255,0,0.07) !important; color: #D4FF00 !important;
+  border: none !important; transform: none !important; box-shadow: none !important;
 }
 
-/* ── Alert boxes ── */
-.stSuccess > div { border-left: 4px solid #00FF41 !important; background: rgba(0,255,65,0.08) !important; }
-.stInfo > div { border-left: 4px solid #00B4FF !important; background: rgba(0,180,255,0.08) !important; }
-.stWarning > div { border-left: 4px solid #E0FF00 !important; background: rgba(224,255,0,0.08) !important; }
-.stError > div { border-left: 4px solid #FF3232 !important; background: rgba(255,50,50,0.08) !important; }
+/* ── Progress ────────────────────────────────────────────── */
+.stProgress > div > div { background: linear-gradient(90deg, #D4FF00, #FFB800) !important; border-radius: 4px !important; }
+
+/* ── Alerts ──────────────────────────────────────────────── */
+.stSuccess > div { border-left: 3px solid #00FF41 !important; background: rgba(0,255,65,0.05) !important; border-radius: 0 8px 8px 0 !important; }
+.stInfo    > div { border-left: 3px solid #4DB8FF !important; background: rgba(77,184,255,0.05) !important; border-radius: 0 8px 8px 0 !important; }
+.stWarning > div { border-left: 3px solid #D4FF00 !important; background: rgba(212,255,0,0.05) !important; border-radius: 0 8px 8px 0 !important; }
+.stError   > div { border-left: 3px solid #FF4444 !important; background: rgba(255,68,68,0.05) !important; border-radius: 0 8px 8px 0 !important; }
 [data-testid="stAlertContainer"] p, [data-testid="stAlertContainer"] { color: #FFFFFF !important; }
 
-/* ── Download button ── */
+/* ── Download button ─────────────────────────────────────── */
 .stDownloadButton > button {
-  background: linear-gradient(135deg, #E0FF00, #B8D400) !important;
-  color: #000000 !important; font-weight: 700 !important; border-radius: 8px !important;
-  box-shadow: 0 0 12px rgba(224,255,0,0.25) !important;
+  background: #D4FF00 !important; color: #000000 !important;
+  font-weight: 700 !important; border-radius: 10px !important;
+  box-shadow: 0 0 16px rgba(212,255,0,0.18) !important; transition: all 0.2s ease !important;
 }
-.stDownloadButton > button:hover { animation: neonYellowPulse 0.9s ease infinite; transform: translateY(-2px) !important; }
+.stDownloadButton > button:hover { box-shadow: 0 4px 24px rgba(212,255,0,0.45) !important; transform: translateY(-2px) !important; }
 
-/* ── Misc ── */
+/* ── Misc overrides ──────────────────────────────────────── */
 .st-emotion-cache-u1kubd { background-color: transparent !important; color: #ffffff !important; }
-.st-emotion-cache-1anq8dj { background-color: #26bd26 !important; }
-button.st-as.st-at.st-au { background-color: #c4c726 !important; }
-.urgent-card { animation: urgencyPulse 1.5s infinite; border: 1px solid #FF1E1E !important; }
+.st-emotion-cache-1anq8dj { background-color: #D4FF00 !important; color: #000 !important; }
+button.st-as.st-at.st-au  { background-color: #D4FF00 !important; color: #000 !important; }
+.urgent-card { animation: urgencyPulse 1.5s infinite; border: 1px solid #FF4444 !important; }
 .flash-banner { animation: flashBanner 1s infinite; padding:12px 20px; border-radius:8px; font-weight:700; text-align:center; font-size:18px; }
-.loader { width:20px; height:20px; background:#E0FF00; border-radius:50%; animation:pulse 1.2s infinite; margin:20px auto; }
-[data-testid="stRadio"] label, [data-testid="stCheckbox"] label { color: #FFFFFF !important; }
-[data-testid="stMetricLabel"] p { color: #888 !important; }
-[data-testid="stMetricValue"] { color: #E0FF00 !important; }
-.stCaption, [data-testid="stCaption"] { color: #888 !important; }
-[data-testid="stCaption"] p { color: #888 !important; }
-.stCodeBlock, [data-testid="stCode"] { border: 1px solid #E0FF00 !important; border-radius: 8px !important; background: #11151F !important; }
-code { color: #E0FF00 !important; background: transparent !important; }
+.loader { width:8px;height:8px;background:#D4FF00;border-radius:50%;display:inline-block;margin:0 3px;animation:dotPulse 1.3s ease-in-out infinite; }
+.loader:nth-child(2){animation-delay:0.18s;} .loader:nth-child(3){animation-delay:0.36s;}
+[data-testid="stRadio"] label, [data-testid="stCheckbox"] label { color: #CCCCCC !important; }
+[data-testid="stMetricLabel"] p { color: #555 !important; }
+[data-testid="stMetricValue"] { color: #D4FF00 !important; }
+.stCaption,[data-testid="stCaption"]   { color: #555 !important; }
+[data-testid="stCaption"] p            { color: #555 !important; }
+.stCodeBlock,[data-testid="stCode"]    { border:1px solid rgba(255,255,255,0.08) !important; border-radius:8px !important; background:#111 !important; }
+code { color: #D4FF00 !important; background: transparent !important; }
+hr   { border-color: rgba(255,255,255,0.06) !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -204,8 +223,8 @@ def status_badge(status):
 
 def card(content_html, urgent=False):
     extra_class = ' class="urgent-card"' if urgent else ''
-    border = "" if urgent else "border:1px solid #E0FF00;"
-    return f'<div{extra_class} style="background:#1A1D24;{border}border-radius:10px;box-shadow:0 0 12px rgba(224,255,0,0.15);padding:20px;margin-bottom:16px;">{content_html}</div>'
+    border = "" if urgent else "border:1px solid rgba(255,255,255,0.07);"
+    return f'<div{extra_class} style="background:#111111;{border}border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.6);padding:20px;margin-bottom:14px;">{content_html}</div>'
 
 
 def img_html(issue):
@@ -305,10 +324,9 @@ if not st.session_state["issues_loaded"]:
 # ─────────────────────────────────────────────
 if st.session_state["current_user"] and st.session_state["page"] not in ("splash", "login"):
     with st.sidebar:
-        st.markdown('<h2 style="color:#E0FF00">⚡ CityFix</h2>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:12px 0 6px;"><span style="font-size:20px;font-weight:800;color:#D4FF00;letter-spacing:-0.5px;">⚡ CityFix</span></div>', unsafe_allow_html=True)
         user = st.session_state["current_user"]
-        st.markdown(f'<p style="color:#C0C0C0;font-size:13px;">👤 {user["name"]} | 🏆 {user["civic_points"]} pts</p>', unsafe_allow_html=True)
-        st.markdown("<hr style='border-color:#333'>", unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size:12px;color:#444;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:6px;">👤 {user["name"]}&nbsp;&nbsp;·&nbsp;&nbsp;🏆 {user["civic_points"]} pts</div>', unsafe_allow_html=True)
         nav_items = [
             ("🏠 Home", "home"), ("📸 Report Issue", "report"),
             ("📍 Nearby Issues", "nearby"), ("🗺️ City Map", "map"),
@@ -326,16 +344,34 @@ if st.session_state["current_user"] and st.session_state["page"] not in ("splash
 # ─────────────────────────────────────────────
 def page_splash():
     st.markdown("""
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
-      <div style="font-size:72px;font-weight:900;color:#E0FF00;letter-spacing:-2px;margin-bottom:12px;">⚡ CityFix</div>
-      <div style="font-size:22px;color:#FFFFFF;margin-bottom:8px;">Your Voice for a Better City</div>
-      <div style="font-size:14px;color:#C0C0C0;margin-bottom:24px;">Hyderabad Civic Issue Reporting Platform</div>
-      <div class="loader"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:82vh;text-align:center;background:radial-gradient(ellipse at 50% 38%,rgba(25,65,18,0.28) 0%,transparent 62%);padding:40px 20px 10px;">
+      <div style="font-size:90px;line-height:1;animation:amberGlow 2.8s ease-in-out infinite;margin-bottom:18px;">⚡</div>
+      <div style="font-size:62px;font-weight:800;color:#FFFFFF;letter-spacing:-2px;line-height:1;margin-bottom:14px;">CityFix</div>
+      <div style="font-size:11px;letter-spacing:6px;color:#444444;font-weight:600;text-transform:uppercase;margin-bottom:14px;">HYDERABAD</div>
+      <div style="font-size:15px;color:#666666;font-style:italic;margin-bottom:34px;">Your voice for a better city</div>
+      <div style="display:flex;gap:4px;margin-bottom:42px;">
+        <span class="loader"></span><span class="loader"></span><span class="loader"></span>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:36px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px 26px;min-width:105px;transition:border-color 0.2s;">
+          <div style="font-size:26px;margin-bottom:8px;">📸</div>
+          <div style="font-size:10px;letter-spacing:2px;color:#555;font-weight:700;text-transform:uppercase;">Report</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px 26px;min-width:105px;">
+          <div style="font-size:26px;margin-bottom:8px;">🗳️</div>
+          <div style="font-size:10px;letter-spacing:2px;color:#555;font-weight:700;text-transform:uppercase;">Vote</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px 26px;min-width:105px;">
+          <div style="font-size:26px;margin-bottom:8px;">🏛️</div>
+          <div style="font-size:10px;letter-spacing:2px;color:#555;font-weight:700;text-transform:uppercase;">Escalate</div>
+        </div>
+      </div>
     </div>
+    <div style="font-size:10px;letter-spacing:2.5px;color:#2A2A2A;text-align:center;margin-bottom:10px;text-transform:uppercase;">Powered by Community &nbsp;·&nbsp; Built for Hyderabad</div>
     """, unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([2, 1, 2])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("Enter CityFix →"):
+        if st.button("Enter CityFix  →", use_container_width=True):
             nav_to("login")
 
 
@@ -343,8 +379,13 @@ def page_splash():
 # MODULE 2 — LOGIN / SIGN UP
 # ─────────────────────────────────────────────
 def page_login():
-    st.markdown('<h1 style="text-align:center;color:#E0FF00;margin-bottom:4px;">⚡ CityFix</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align:center;color:#C0C0C0;margin-bottom:24px;">Hyderabad\'s Civic Issue Platform</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align:center;padding:28px 0 20px;">
+      <div style="font-size:44px;animation:amberGlow 2.8s ease-in-out infinite;display:inline-block;">⚡</div>
+      <div style="font-size:32px;font-weight:800;color:#FFFFFF;letter-spacing:-1px;margin-top:6px;">CityFix</div>
+      <div style="font-size:10px;letter-spacing:5px;color:#444;font-weight:600;text-transform:uppercase;margin:6px 0 4px;">HYDERABAD</div>
+      <div style="font-size:13px;color:#555;font-style:italic;">Your civic voice, amplified</div>
+    </div>""", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
