@@ -2025,10 +2025,15 @@ def page_admin():
                                     filename=f"CityFix_Bundle_{datetime.now().strftime('%Y%m%d')}.pdf")
                                 msg.attach(attachment)
 
+                                smtp_user = st.secrets.get("SMTP_EMAIL", "")
+                                smtp_pass = st.secrets.get("SMTP_PASSWORD", "")
+                                if not smtp_user or not smtp_pass:
+                                    raise Exception("SMTP credentials not configured. Add SMTP_EMAIL and SMTP_PASSWORD to Streamlit secrets.")
+                                msg["From"] = smtp_user
                                 context = ssl.create_default_context()
                                 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-                                    server.login("noreply.cityfix@gmail.com", "placeholder_pass")
-                                    server.sendmail(msg["From"], [to_email, cc_email], msg.as_string())
+                                    server.login(smtp_user, smtp_pass)
+                                    server.sendmail(smtp_user, [to_email, cc_email], msg.as_string())
                                 sent = True
                             except Exception as e:
                                 error_msg = str(e)
