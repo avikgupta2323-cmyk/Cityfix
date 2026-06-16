@@ -161,6 +161,21 @@ button.st-as.st-at.st-au  { background-color: #E11D48 !important; color: #fff !i
 .stCodeBlock,[data-testid="stCode"]    { border:1px solid rgba(255,255,255,0.08) !important; border-radius:8px !important; background:#131836 !important; }
 code { color: #E11D48 !important; background: transparent !important; }
 hr   { border-color: rgba(255,255,255,0.06) !important; }
+
+/* ── Secondary buttons (Electric Violet) ────────────────── */
+.secondary-btn .stButton > button {
+  background: #7C3AED !important; color: #FFFFFF !important;
+  border: none !important; border-radius: 10px !important;
+  font-weight: 700 !important; font-size: 14px !important;
+  transition: all 0.2s ease !important; padding: 0.45rem 1.25rem !important;
+  box-shadow: 0 0 14px rgba(124,58,237,0.3) !important;
+}
+.secondary-btn .stButton > button:hover {
+  background: #6D28D9 !important; color: #FFFFFF !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.55) !important;
+}
+.secondary-btn .stButton > button:active { transform: translateY(0) !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -431,6 +446,7 @@ def page_login():
 
             st.markdown('<div style="text-align:center;margin:12px 0;color:#555;">— or —</div>', unsafe_allow_html=True)
 
+            st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
             if st.button("🔵 Continue with Google", key="btn_google", use_container_width=True):
                 st.markdown("""
                 <div style="background:#131836;border:1px solid #4285F4;border-radius:8px;padding:12px 16px;margin-top:4px;">
@@ -443,6 +459,8 @@ def page_login():
                   </div>
                 </div>""", unsafe_allow_html=True)
 
+            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
             if st.button("🎮 Use Demo Account", key="btn_demo"):
                 demo_id = "demo_" + str(uuid.uuid4())[:8]
                 demo = {
@@ -454,6 +472,7 @@ def page_login():
                 st.session_state["users"][demo_id] = demo
                 st.session_state["current_user"] = demo
                 nav_to("home")
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # --- SIGN UP TAB ---
         with tab_signup:
@@ -794,9 +813,11 @@ def page_report():
                         st.info("You already voted on this issue.")
                     st.session_state["session_flags"].pop("bypass_dup", None)
             with col_b:
+                st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
                 if st.button("No, This Is Different — Submit Anyway", key="btn_bypass_dup"):
                     st.session_state["session_flags"]["bypass_dup"] = True
                     st.rerun()
+                st.markdown('</div>', unsafe_allow_html=True)
             return
 
         # Clear bypass flag
@@ -930,8 +951,10 @@ def page_issue_detail():
 
     user = st.session_state["current_user"]
 
+    st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
     if st.button("← Back"):
         nav_to("nearby")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown(f'<h2>{issue["title"]}</h2>', unsafe_allow_html=True)
 
@@ -1628,10 +1651,12 @@ def page_profile():
                 </div>""", unsafe_allow_html=True)
 
     st.markdown('<div style="height:16px"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
     if st.button("🚪 Logout", key="btn_logout"):
         st.session_state["current_user"] = None
         st.session_state["admin_authenticated"] = False
         nav_to("login")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
@@ -2092,9 +2117,11 @@ def page_admin():
             </div>"""), unsafe_allow_html=True)
 
     st.markdown('<div style="height:16px"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="secondary-btn">', unsafe_allow_html=True)
     if st.button("🚪 Exit Admin Mode", key="btn_exit_admin"):
         st.session_state["admin_authenticated"] = False
         nav_to("home")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
