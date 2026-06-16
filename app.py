@@ -41,7 +41,7 @@ st.markdown("""
 <style>
 /* ── Keyframes ─────────────────────────────────────────── */
 @keyframes fadeIn   { from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);} }
-@keyframes glow     { 0%,100%{text-shadow:0 0 14px rgba(212,255,0,0.5);}50%{text-shadow:0 0 28px rgba(212,255,0,0.9),0 0 55px rgba(212,255,0,0.35);} }
+@keyframes glow     { 0%,100%{text-shadow:0 0 14px rgba(225,29,72,0.5);}50%{text-shadow:0 0 28px rgba(225,29,72,0.9),0 0 55px rgba(225,29,72,0.35);} }
 @keyframes amberGlow{ 0%,100%{filter:drop-shadow(0 0 12px rgba(255,184,0,0.65));}50%{filter:drop-shadow(0 0 32px rgba(255,184,0,1)) drop-shadow(0 0 55px rgba(255,140,0,0.5));} }
 @keyframes dotPulse { 0%,80%,100%{transform:scale(0.3);opacity:0.25;}40%{transform:scale(1);opacity:1;} }
 @keyframes urgencyPulse { 0%,100%{box-shadow:0 0 8px rgba(255,50,50,0.4);}50%{box-shadow:0 0 24px rgba(255,50,50,0.9);} }
@@ -49,50 +49,50 @@ st.markdown("""
 @keyframes spinnerPulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(1.25)} }
 
 /* ── Base ────────────────────────────────────────────────── */
-body, .stApp { background-color: #0A0A0A !important; color: #FFFFFF !important; }
+body, .stApp { background-color: #0A0E27 !important; color: #FFFFFF !important; }
 .block-container { animation: fadeIn 0.4s ease; padding-top: 0.5rem !important; }
 .element-container { animation: fadeIn 0.35s ease; }
 
 /* ── Typography ──────────────────────────────────────────── */
-h1 { color: #D4FF00 !important; font-weight: 800 !important; letter-spacing: -0.5px !important; animation: glow 4s ease-in-out infinite; }
+h1 { color: #E11D48 !important; font-weight: 800 !important; letter-spacing: -0.5px !important; animation: glow 4s ease-in-out infinite; }
 h2 { color: #FFFFFF !important; font-weight: 700 !important; }
-h3 { color: #D4FF00 !important; font-weight: 600 !important; }
+h3 { color: #E11D48 !important; font-weight: 600 !important; }
 p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !important; }
 
 /* ── Buttons ─────────────────────────────────────────────── */
 .stButton > button {
-  background: #D4FF00 !important; color: #000000 !important;
+  background: #E11D48 !important; color: #FFFFFF !important;
   border: none !important; border-radius: 10px !important;
   font-weight: 700 !important; font-size: 14px !important; letter-spacing: 0.4px !important;
   transition: all 0.2s ease !important; padding: 0.45rem 1.25rem !important;
 }
 .stButton > button:hover {
-  background: #C0EC00 !important; color: #000000 !important;
+  background: #C8102E !important; color: #FFFFFF !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 4px 22px rgba(212,255,0,0.38) !important;
+  box-shadow: 0 4px 22px rgba(225,29,72,0.38) !important;
 }
 .stButton > button:active { transform: translateY(0) !important; }
 
 /* ── Inputs ──────────────────────────────────────────────── */
 .stTextInput > div > div > input {
-  background: #111111 !important; color: #FFFFFF !important;
+  background: #131836 !important; color: #FFFFFF !important;
   border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
   font-size: 14px !important; transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 .stTextInput > div > div > input:focus {
-  border-color: #D4FF00 !important; box-shadow: 0 0 0 3px rgba(212,255,0,0.1) !important;
+  border-color: #E11D48 !important; box-shadow: 0 0 0 3px rgba(225,29,72,0.1) !important;
 }
 .stTextArea > div > div > textarea {
-  background: #111111 !important; color: #FFFFFF !important;
+  background: #131836 !important; color: #FFFFFF !important;
   border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
 }
-.stTextArea > div > div > textarea:focus { border-color: #D4FF00 !important; }
+.stTextArea > div > div > textarea:focus { border-color: #E11D48 !important; }
 .stSelectbox > div > div {
-  background: #111111 !important; color: #FFFFFF !important;
+  background: #131836 !important; color: #FFFFFF !important;
   border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
 }
 .stNumberInput > div > div > input {
-  background: #111111 !important; color: #FFFFFF !important;
+  background: #131836 !important; color: #FFFFFF !important;
   border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important;
 }
 
@@ -107,13 +107,13 @@ p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !impo
 }
 .stTabs [data-baseweb="tab"]:hover { color: #CCCCCC !important; }
 .stTabs [aria-selected="true"] {
-  background: #D4FF00 !important; color: #000000 !important;
-  font-weight: 800 !important; border-bottom: 2px solid #D4FF00 !important;
+  background: #E11D48 !important; color: #FFFFFF !important;
+  font-weight: 800 !important; border-bottom: 2px solid #E11D48 !important;
   letter-spacing: 0.2px !important;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────── */
-.stSidebar { background: #070707 !important; border-right: 1px solid rgba(255,255,255,0.05) !important; }
+.stSidebar { background: #080B1E !important; border-right: 1px solid rgba(255,255,255,0.05) !important; }
 .stSidebar .stButton > button {
   width: 100% !important; text-align: left !important;
   background: transparent !important; color: #777 !important;
@@ -123,43 +123,43 @@ p, label, .stMarkdown { color: #FFFFFF !important; background: transparent !impo
   transform: none !important; box-shadow: none !important;
 }
 .stSidebar .stButton > button:hover {
-  background: rgba(212,255,0,0.07) !important; color: #D4FF00 !important;
+  background: rgba(225,29,72,0.07) !important; color: #E11D48 !important;
   border: none !important; transform: none !important; box-shadow: none !important;
 }
 
 /* ── Progress ────────────────────────────────────────────── */
-.stProgress > div > div { background: linear-gradient(90deg, #D4FF00, #FFB800) !important; border-radius: 4px !important; }
+.stProgress > div > div { background: linear-gradient(90deg, #E11D48, #FFB800) !important; border-radius: 4px !important; }
 
 /* ── Alerts ──────────────────────────────────────────────── */
 .stSuccess > div { border-left: 3px solid #00FF41 !important; background: rgba(0,255,65,0.05) !important; border-radius: 0 8px 8px 0 !important; }
 .stInfo    > div { border-left: 3px solid #4DB8FF !important; background: rgba(77,184,255,0.05) !important; border-radius: 0 8px 8px 0 !important; }
-.stWarning > div { border-left: 3px solid #D4FF00 !important; background: rgba(212,255,0,0.05) !important; border-radius: 0 8px 8px 0 !important; }
+.stWarning > div { border-left: 3px solid #E11D48 !important; background: rgba(225,29,72,0.05) !important; border-radius: 0 8px 8px 0 !important; }
 .stError   > div { border-left: 3px solid #FF4444 !important; background: rgba(255,68,68,0.05) !important; border-radius: 0 8px 8px 0 !important; }
 [data-testid="stAlertContainer"] p, [data-testid="stAlertContainer"] { color: #FFFFFF !important; }
 
 /* ── Download button ─────────────────────────────────────── */
 .stDownloadButton > button {
-  background: #D4FF00 !important; color: #000000 !important;
+  background: #E11D48 !important; color: #FFFFFF !important;
   font-weight: 700 !important; border-radius: 10px !important;
-  box-shadow: 0 0 16px rgba(212,255,0,0.18) !important; transition: all 0.2s ease !important;
+  box-shadow: 0 0 16px rgba(225,29,72,0.18) !important; transition: all 0.2s ease !important;
 }
-.stDownloadButton > button:hover { box-shadow: 0 4px 24px rgba(212,255,0,0.45) !important; transform: translateY(-2px) !important; }
+.stDownloadButton > button:hover { box-shadow: 0 4px 24px rgba(225,29,72,0.45) !important; transform: translateY(-2px) !important; }
 
 /* ── Misc overrides ──────────────────────────────────────── */
 .st-emotion-cache-u1kubd { background-color: transparent !important; color: #ffffff !important; }
-.st-emotion-cache-1anq8dj { background-color: #D4FF00 !important; color: #000 !important; }
-button.st-as.st-at.st-au  { background-color: #D4FF00 !important; color: #000 !important; }
+.st-emotion-cache-1anq8dj { background-color: #E11D48 !important; color: #fff !important; }
+button.st-as.st-at.st-au  { background-color: #E11D48 !important; color: #fff !important; }
 .urgent-card { animation: urgencyPulse 1.5s infinite; border: 1px solid #FF4444 !important; }
 .flash-banner { animation: flashBanner 1s infinite; padding:12px 20px; border-radius:8px; font-weight:700; text-align:center; font-size:18px; }
-.loader { width:8px;height:8px;background:#D4FF00;border-radius:50%;display:inline-block;margin:0 3px;animation:dotPulse 1.3s ease-in-out infinite; }
+.loader { width:8px;height:8px;background:#E11D48;border-radius:50%;display:inline-block;margin:0 3px;animation:dotPulse 1.3s ease-in-out infinite; }
 .loader:nth-child(2){animation-delay:0.18s;} .loader:nth-child(3){animation-delay:0.36s;}
 [data-testid="stRadio"] label, [data-testid="stCheckbox"] label { color: #CCCCCC !important; }
 [data-testid="stMetricLabel"] p { color: #555 !important; }
-[data-testid="stMetricValue"] { color: #D4FF00 !important; }
+[data-testid="stMetricValue"] { color: #E11D48 !important; }
 .stCaption,[data-testid="stCaption"]   { color: #555 !important; }
 [data-testid="stCaption"] p            { color: #555 !important; }
-.stCodeBlock,[data-testid="stCode"]    { border:1px solid rgba(255,255,255,0.08) !important; border-radius:8px !important; background:#111 !important; }
-code { color: #D4FF00 !important; background: transparent !important; }
+.stCodeBlock,[data-testid="stCode"]    { border:1px solid rgba(255,255,255,0.08) !important; border-radius:8px !important; background:#131836 !important; }
+code { color: #E11D48 !important; background: transparent !important; }
 hr   { border-color: rgba(255,255,255,0.06) !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -228,7 +228,7 @@ def status_badge(status):
 def card(content_html, urgent=False):
     extra_class = ' class="urgent-card"' if urgent else ''
     border = "" if urgent else "border:1px solid rgba(255,255,255,0.07);"
-    return f'<div{extra_class} style="background:#111111;{border}border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.6);padding:20px;margin-bottom:14px;">{content_html}</div>'
+    return f'<div{extra_class} style="background:#131836;{border}border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.6);padding:20px;margin-bottom:14px;">{content_html}</div>'
 
 
 def img_html(issue):
@@ -344,7 +344,7 @@ if not st.session_state["issues_loaded"]:
 # ─────────────────────────────────────────────
 if st.session_state["current_user"] and st.session_state["page"] not in ("splash", "login"):
     with st.sidebar:
-        st.markdown('<div style="padding:12px 0 6px;"><span style="font-size:20px;font-weight:800;color:#D4FF00;letter-spacing:-0.5px;">⚡ CityFix</span></div>', unsafe_allow_html=True)
+        st.markdown('<div style="padding:12px 0 6px;"><span style="font-size:20px;font-weight:800;color:#E11D48;letter-spacing:-0.5px;">⚡ CityFix</span></div>', unsafe_allow_html=True)
         user = st.session_state["current_user"]
         st.markdown(f'<div style="font-size:12px;color:#444;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:6px;">👤 {user["name"]}&nbsp;&nbsp;·&nbsp;&nbsp;🏆 {user["civic_points"]} pts</div>', unsafe_allow_html=True)
         nav_items = [
@@ -433,7 +433,7 @@ def page_login():
 
             if st.button("🔵 Continue with Google", key="btn_google", use_container_width=True):
                 st.markdown("""
-                <div style="background:#1A1D24;border:1px solid #4285F4;border-radius:8px;padding:12px 16px;margin-top:4px;">
+                <div style="background:#131836;border:1px solid #4285F4;border-radius:8px;padding:12px 16px;margin-top:4px;">
                   <div style="color:#4285F4;font-weight:700;margin-bottom:4px;">Google OAuth not configured</div>
                   <div style="color:#C0C0C0;font-size:13px;">
                     To enable Google login, register a Google OAuth 2.0 app at
@@ -464,7 +464,7 @@ def page_login():
                 email_su = st.text_input("Email", key="su_email", placeholder="rahul@example.com")
                 pass_su = st.text_input("Password", type="password", key="su_pass", placeholder="Min 6 characters")
                 # ── REAL-TIME LOCATION CAPTURE ──────────────────────
-                st.markdown('<p style="color:#E0FF00;font-weight:700;margin-bottom:4px;">📍 Your Location</p>', unsafe_allow_html=True)
+                st.markdown('<p style="color:#E11D48;font-weight:700;margin-bottom:4px;">📍 Your Location</p>', unsafe_allow_html=True)
 
                 # Initialise persistent geo state for signup
                 if "signup_geo_lat" not in st.session_state:
@@ -556,7 +556,7 @@ def page_login():
                         st.session_state["users"][uid] = new_user
                         st.session_state["current_user"] = new_user
                         _ph = st.empty()
-                        _ph.markdown(f'<div style="background:#1A1D24;border:2px solid #00FF41;border-radius:10px;padding:24px;text-align:center;"><div style="font-size:32px;margin-bottom:8px;">🎉</div><div style="color:#00FF41;font-size:20px;font-weight:700;">Welcome to CityFix, {name_su}!</div><div style="color:#C0C0C0;margin-top:8px;">Your micro-locality: <b style="color:#E0FF00">{locality}</b></div></div>', unsafe_allow_html=True)
+                        _ph.markdown(f'<div style="background:#131836;border:2px solid #00FF41;border-radius:10px;padding:24px;text-align:center;"><div style="font-size:32px;margin-bottom:8px;">🎉</div><div style="color:#00FF41;font-size:20px;font-weight:700;">Welcome to CityFix, {name_su}!</div><div style="color:#C0C0C0;margin-top:8px;">Your micro-locality: <b style="color:#E11D48">{locality}</b></div></div>', unsafe_allow_html=True)
                         time.sleep(1.5)
                         _ph.empty()
                         nav_to("home")
@@ -574,7 +574,7 @@ def page_home():
     <div style="display:flex;gap:32px;flex-wrap:wrap;">
       <div><span style="color:#888;font-size:12px;">LOCATION</span><br><span style="color:#FFFFFF;font-size:16px;">📍 {user["locality"]}</span></div>
       <div><span style="color:#888;font-size:12px;">COORDINATES</span><br><span style="color:#FFFFFF;font-size:16px;">{user["lat"]:.4f}, {user["lon"]:.4f}</span></div>
-      <div><span style="color:#888;font-size:font-size:12px;">CIVIC POINTS</span><br><span style="color:#E0FF00;font-size:20px;font-weight:700;">🏆 {user["civic_points"]}</span></div>
+      <div><span style="color:#888;font-size:font-size:12px;">CIVIC POINTS</span><br><span style="color:#E11D48;font-size:20px;font-weight:700;">🏆 {user["civic_points"]}</span></div>
     </div>
     """), unsafe_allow_html=True)
 
@@ -611,7 +611,7 @@ def page_home():
                   <div style="flex:1;">
                     <div style="color:#FFFFFF;font-weight:700;">{issue["title"]}</div>
                     <div style="margin-top:4px;">{status_badge(issue["status"])} &nbsp; <span style="color:#888;font-size:12px;">{issue["category"]} | {issue["locality"]}</span></div>
-                    <div style="color:#E0FF00;font-size:13px;margin-top:4px;">👍 {issue["votes"]} votes</div>
+                    <div style="color:#E11D48;font-size:13px;margin-top:4px;">👍 {issue["votes"]} votes</div>
                   </div>
                 </div>""", urgent=is_urgent), unsafe_allow_html=True)
         else:
@@ -624,7 +624,7 @@ def page_home():
     top5 = all_users[:5]
     if top5:
         medals = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"]
-        rows = "".join([f"<tr><td style='color:#E0FF00;font-size:20px;'>{medals[i]}</td><td style='color:#FFFFFF;padding:8px 16px;'>{u['name']}</td><td style='color:#C0C0C0;'>{u['locality']}</td><td style='color:#E0FF00;font-weight:700;'>{u['civic_points']} pts</td></tr>" for i, u in enumerate(top5)])
+        rows = "".join([f"<tr><td style='color:#E11D48;font-size:20px;'>{medals[i]}</td><td style='color:#FFFFFF;padding:8px 16px;'>{u['name']}</td><td style='color:#C0C0C0;'>{u['locality']}</td><td style='color:#E11D48;font-weight:700;'>{u['civic_points']} pts</td></tr>" for i, u in enumerate(top5)])
         st.markdown(card(f"""
         <table style="width:100%;border-collapse:collapse;">
           <thead><tr><th style="color:#888;text-align:left;padding:4px 8px;">#</th><th style="color:#888;text-align:left;padding:4px 16px;">Name</th><th style="color:#888;text-align:left;">Locality</th><th style="color:#888;text-align:left;">Points</th></tr></thead>
@@ -655,8 +655,8 @@ def page_report():
         st.markdown("""
         <div style="position:relative;">
           <div style="position:absolute;top:0;left:0;right:0;bottom:0;
-            background: linear-gradient(rgba(224,255,0,0.2) 1px,transparent 1px) 0 33%/100% 33%,
-                        linear-gradient(90deg,rgba(224,255,0,0.2) 1px,transparent 1px) 33% 0/33% 100%;
+            background: linear-gradient(rgba(225,29,72,0.2) 1px,transparent 1px) 0 33%/100% 33%,
+                        linear-gradient(90deg,rgba(225,29,72,0.2) 1px,transparent 1px) 33% 0/33% 100%;
             pointer-events:none;z-index:10;border-radius:8px;"></div>
         </div>""", unsafe_allow_html=True)
         camera_img = st.camera_input("Take a photo", key="report_camera")
@@ -850,12 +850,12 @@ def page_nearby():
                        tiles="CartoDB dark_matter")
         folium.Circle(
             location=[user["lat"], user["lon"]],
-            radius=500, color="#E0FF00", fill=True, fill_opacity=0.1,
+            radius=500, color="#E11D48", fill=True, fill_opacity=0.1,
             popup="500m from your home"
         ).add_to(m)
         folium.CircleMarker(
             location=[user["lat"], user["lon"]],
-            radius=8, color="#E0FF00", fill=True, fill_opacity=1,
+            radius=8, color="#E11D48", fill=True, fill_opacity=1,
             popup="Your Location"
         ).add_to(m)
         for issue in st.session_state["issues"]:
@@ -893,7 +893,7 @@ def page_nearby():
             st.markdown('<p style="color:#888;">No issues match the selected filters.</p>', unsafe_allow_html=True)
         for issue in filtered:
             dist = haversine(user["lat"], user["lon"], issue["lat"], issue["lon"])
-            dist_note = f'📍 <span style="color:#E0FF00;font-weight:600;">{dist:.0f} meters from your home [Under 500 meters]</span>' if dist < 500 else f'📍 {dist/1000:.1f} km from your home'
+            dist_note = f'📍 <span style="color:#E11D48;font-weight:600;">{dist:.0f} meters from your home [Under 500 meters]</span>' if dist < 500 else f'📍 {dist/1000:.1f} km from your home'
             is_urgent = issue["severity"] == "High" and issue["votes"] > 70
             sev_colors = {"Low": "#00FF99", "Medium": "#FF6600", "High": "#FF1E1E"}
             sev_color = sev_colors.get(issue["severity"], "#888")
@@ -906,7 +906,7 @@ def page_nearby():
                   <span style="background:{sev_color}22;border:1px solid {sev_color};color:{sev_color};padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">{issue["severity"]}</span>
                   &nbsp; <span style="background:#222;border:1px solid #444;color:#C0C0C0;padding:2px 10px;border-radius:999px;font-size:11px;">{issue["category"]}</span>
                 </div>
-                <div style="color:#E0FF00;font-size:13px;">👍 {issue["votes"]} votes | 📍 {issue["locality"]}</div>
+                <div style="color:#E11D48;font-size:13px;">👍 {issue["votes"]} votes | 📍 {issue["locality"]}</div>
                 <div style="font-size:12px;margin-top:4px;">{dist_note}</div>
               </div>
             </div>"""
@@ -956,7 +956,7 @@ def page_issue_detail():
           <div style="color:#888;font-size:12px;margin-top:8px;">REPORTED</div>
           <div style="color:#C0C0C0;font-size:13px;">{issue["created_at"].strftime("%d %b %Y, %H:%M")}</div>
           <div style="color:#888;font-size:12px;margin-top:8px;">VOTES</div>
-          <div style="color:#E0FF00;font-size:22px;font-weight:700;">👍 {issue["votes"]}</div>
+          <div style="color:#E11D48;font-size:22px;font-weight:700;">👍 {issue["votes"]}</div>
         </div>"""), unsafe_allow_html=True)
 
     # Description
@@ -1005,7 +1005,7 @@ def page_issue_detail():
         for c in st.session_state["comments"][iid]:
             st.markdown(card(f"""
             <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-              <span style="color:#E0FF00;font-weight:600;">{c["user"]}</span>
+              <span style="color:#E11D48;font-weight:600;">{c["user"]}</span>
               <span style="color:#555;font-size:12px;">{c["timestamp"].strftime("%d %b, %H:%M")}</span>
             </div>
             <div style="color:#C0C0C0;">{c["text"]}</div>"""), unsafe_allow_html=True)
@@ -1059,7 +1059,7 @@ def page_voting():
     else:
         st.markdown(f"""
         <div style="color:#FFFFFF;font-size:18px;font-weight:700;margin-bottom:8px;">
-          Needed: 100 Votes | Current: <span style="color:#E0FF00;">{issue["votes"]} Votes</span>
+          Needed: 100 Votes | Current: <span style="color:#E11D48;">{issue["votes"]} Votes</span>
         </div>""", unsafe_allow_html=True)
         st.progress(min(issue["votes"] / 100, 1.0))
 
@@ -1085,7 +1085,7 @@ def page_voting():
     comments = st.session_state["comments"].get(iid, [])
     if comments:
         for c in reversed(comments[-5:]):
-            st.markdown(card(f'<span style="color:#E0FF00;font-weight:600;">{c["user"]}</span> <span style="color:#555;font-size:12px;">· {c["timestamp"].strftime("%d %b, %H:%M")}</span><br><span style="color:#C0C0C0;">{c["text"]}</span>'), unsafe_allow_html=True)
+            st.markdown(card(f'<span style="color:#E11D48;font-weight:600;">{c["user"]}</span> <span style="color:#555;font-size:12px;">· {c["timestamp"].strftime("%d %b, %H:%M")}</span><br><span style="color:#C0C0C0;">{c["text"]}</span>'), unsafe_allow_html=True)
     else:
         st.markdown('<p style="color:#888;">No comments yet. Be the first to comment in Issue Details.</p>', unsafe_allow_html=True)
 
@@ -1124,7 +1124,7 @@ def _neighborhood_health(issues):
 
 def _health_color(score):
     if score >= 80: return "#00FF99", "Healthy"
-    if score >= 60: return "#E0FF00", "Moderate"
+    if score >= 60: return "#E11D48", "Moderate"
     if score >= 40: return "#FF6600", "Stressed"
     return "#FF1E1E", "Critical"
 
@@ -1157,11 +1157,11 @@ def page_map():
         m = folium.Map(location=[17.3850, 78.4867], zoom_start=12, tiles="CartoDB dark_matter")
         folium.Circle(
             location=[user["lat"], user["lon"]],
-            radius=500, color="#E0FF00", fill=True, fill_opacity=0.1
+            radius=500, color="#E11D48", fill=True, fill_opacity=0.1
         ).add_to(m)
         folium.CircleMarker(
             location=[user["lat"], user["lon"]],
-            radius=10, color="#E0FF00", fill=True, fill_opacity=1,
+            radius=10, color="#E11D48", fill=True, fill_opacity=1,
             tooltip="📍 Your Location"
         ).add_to(m)
         cluster = MarkerCluster(name="Issues").add_to(m)
@@ -1226,7 +1226,7 @@ def page_map():
         # User marker
         folium.CircleMarker(
             location=[user["lat"], user["lon"]],
-            radius=10, color="#E0FF00", fill=True, fill_opacity=1,
+            radius=10, color="#E11D48", fill=True, fill_opacity=1,
             tooltip="📍 Your Location"
         ).add_to(hm)
 
@@ -1291,7 +1291,7 @@ def page_map():
         <div style="color:#888;font-size:12px;margin-bottom:6px;">NEIGHBORHOOD HEALTH ZONES:</div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;">
           <span style="color:#00FF99;font-size:13px;">🟢 80–100 Healthy</span>
-          <span style="color:#E0FF00;font-size:13px;">🟡 60–79 Moderate</span>
+          <span style="color:#E11D48;font-size:13px;">🟡 60–79 Moderate</span>
           <span style="color:#FF6600;font-size:13px;">🟠 40–59 Stressed</span>
           <span style="color:#FF1E1E;font-size:13px;">🔴 0–39 Critical</span>
         </div>"""
@@ -1316,7 +1316,7 @@ def page_map():
 
             kc1, kc2, kc3, kc4 = st.columns(4)
             for col, label, value, color in [
-                (kc1, "Avg Health Score", f"{avg_score:.0f}/100", "#E0FF00"),
+                (kc1, "Avg Health Score", f"{avg_score:.0f}/100", "#E11D48"),
                 (kc2, "Open Issues", str(total_open), "#FF6600"),
                 (kc3, "Fixed Issues", str(total_fixed), "#00FF99"),
                 (kc4, "Needs Attention", worst, "#FF1E1E"),
@@ -1396,8 +1396,8 @@ def page_my_reports():
             done = idx <= cur_idx
             return (
                 f'<div style="display:flex;flex-direction:column;align-items:center;flex:1;">'
-                f'<div style="width:16px;height:16px;border-radius:50%;background:{"#E0FF00" if done else "#2A2A2A"};border:2px solid {"#E0FF00" if done else "#444"};"></div>'
-                f'<div style="font-size:11px;margin-top:4px;color:{"#E0FF00" if done else "#555"};">{s}</div>'
+                f'<div style="width:16px;height:16px;border-radius:50%;background:{"#E11D48" if done else "#2A2A2A"};border:2px solid {"#E11D48" if done else "#444"};"></div>'
+                f'<div style="font-size:11px;margin-top:4px;color:{"#E11D48" if done else "#555"};">{s}</div>'
                 f'</div>'
             )
 
@@ -1414,7 +1414,7 @@ def page_my_reports():
               <span style="background:{sc}22;border:1px solid {sc};color:{sc};padding:2px 10px;border-radius:999px;font-size:11px;">{issue["severity"]}</span>
             </div>
             <div style="color:#888;font-size:13px;">{issue["category"]} | {issue["locality"]} | {issue["created_at"].strftime("%d %b %Y")}</div>
-            <div style="color:#E0FF00;font-size:13px;">👍 {issue["votes"]} votes</div>
+            <div style="color:#E11D48;font-size:13px;">👍 {issue["votes"]} votes</div>
           </div>
         </div>
         <div style="margin-top:12px;">
@@ -1527,7 +1527,7 @@ def page_share():
             pdf.multi_cell(0, 6, safe_text(f"Description: {iss['description']}"))
             pdf.ln(6)
             pdf.set_font("Helvetica", "B", 12)
-            pdf.set_fill_color(224, 255, 0)
+            pdf.set_fill_color(225, 29, 72)
             pdf.set_text_color(0, 0, 0)
             pdf.cell(0, 10, safe_text(f"Endorsed via Community Consensus ({len(st.session_state['users'])} Registered Citizens)"), ln=True, fill=True, align="C")
             return bytes(pdf.output())
@@ -1569,8 +1569,8 @@ def page_profile():
     # User card
     st.markdown(card(f"""
     <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
-      <div style="width:72px;height:72px;border-radius:50%;background:#1A1D24;border:3px solid #E0FF00;
-           display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#E0FF00;flex-shrink:0;">
+      <div style="width:72px;height:72px;border-radius:50%;background:#131836;border:3px solid #E11D48;
+           display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#E11D48;flex-shrink:0;">
         {initials}
       </div>
       <div>
@@ -1585,7 +1585,7 @@ def page_profile():
     st.markdown('<h3>💰 Civic Points Wallet</h3>', unsafe_allow_html=True)
     st.markdown(card(f"""
     <div style="text-align:center;padding:12px 0;">
-      <div style="font-size:56px;font-weight:900;color:#E0FF00;">{user["civic_points"]}</div>
+      <div style="font-size:56px;font-weight:900;color:#E11D48;">{user["civic_points"]}</div>
       <div style="color:#C0C0C0;margin-bottom:16px;">Total Civic Points</div>
       <div style="text-align:left;max-width:320px;margin:0 auto;">
         <div style="color:#888;font-size:13px;margin-bottom:6px;">How you earn points:</div>
@@ -1614,13 +1614,13 @@ def page_profile():
                 st.markdown(card(f"""
                 <div style="text-align:center;padding:12px 4px;">
                   <div style="font-size:36px;">{badge["icon"]}</div>
-                  <div style="color:#E0FF00;font-weight:700;font-size:13px;margin-top:8px;">{badge["name"]}</div>
+                  <div style="color:#E11D48;font-weight:700;font-size:13px;margin-top:8px;">{badge["name"]}</div>
                   <div style="color:#888;font-size:11px;margin-top:4px;">{badge["desc"]}</div>
                   <div style="color:#00FF99;font-size:11px;margin-top:6px;">✅ Unlocked</div>
                 </div>"""), unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div style="background:#111;border:1px solid #333;border-radius:10px;padding:20px 4px;margin-bottom:16px;text-align:center;">
+                <div style="background:#131836;border:1px solid #333;border-radius:10px;padding:20px 4px;margin-bottom:16px;text-align:center;">
                   <div style="font-size:36px;filter:grayscale(1);opacity:0.4;">{badge["icon"]}🔒</div>
                   <div style="color:#555;font-weight:700;font-size:13px;margin-top:8px;">{badge["name"]}</div>
                   <div style="color:#444;font-size:11px;margin-top:4px;">{badge["desc"]}</div>
@@ -1671,7 +1671,7 @@ def page_admin():
 
             st.markdown(card(f"""
             <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
-              <div style="color:#E0FF00;font-size:28px;font-weight:900;min-width:36px;">#{rank}</div>
+              <div style="color:#E11D48;font-size:28px;font-weight:900;min-width:36px;">#{rank}</div>
               <div style="flex:0 0 80px;">{img_html(issue)}</div>
               <div style="flex:1;min-width:200px;">
                 <div style="color:#FFFFFF;font-weight:700;">{issue["title"]}</div>
@@ -1679,7 +1679,7 @@ def page_admin():
                   <span style="background:{sc}22;border:1px solid {sc};color:{sc};padding:2px 8px;border-radius:999px;font-size:11px;">{issue["severity"]}</span>
                 </div>
                 <div style="color:#888;font-size:13px;">{issue["category"]} | {issue["locality"]} | 👍 {issue["votes"]} votes</div>
-                <div style="color:#E0FF00;font-size:13px;margin-top:4px;">Priority Score: <b>{score:.1f}</b></div>
+                <div style="color:#E11D48;font-size:13px;margin-top:4px;">Priority Score: <b>{score:.1f}</b></div>
               </div>
             </div>"""), unsafe_allow_html=True)
 
@@ -1769,7 +1769,7 @@ def page_admin():
             st.markdown(card(f"""
             <div style="display:flex;gap:24px;flex-wrap:wrap;">
               <div style="text-align:center;">
-                <div style="color:#E0FF00;font-size:28px;font-weight:900;">{len(qualified)}</div>
+                <div style="color:#E11D48;font-size:28px;font-weight:900;">{len(qualified)}</div>
                 <div style="color:#888;font-size:12px;">Qualified Issues</div>
               </div>
               <div style="text-align:center;">
@@ -1877,7 +1877,7 @@ def page_admin():
                     pdf.set_fill_color(0, 0, 0)
                     pdf.rect(0, 0, 210, 297, "F")
                     pdf.set_font("Helvetica", "B", 24)
-                    pdf.set_text_color(224, 255, 0)
+                    pdf.set_text_color(225, 29, 72)
                     pdf.ln(30)
                     pdf.cell(0, 12, "CityFix", ln=True, align="C")
                     pdf.set_font("Helvetica", "B", 14)
@@ -1913,7 +1913,7 @@ def page_admin():
                         pdf.set_font("Helvetica", "B", 14)
                         pdf.set_text_color(0, 0, 0)
                         pdf.cell(0, 10, f"Issue #{idx} of {len(issues_list)}", ln=True)
-                        pdf.set_fill_color(224, 255, 0)
+                        pdf.set_fill_color(225, 29, 72)
                         pdf.set_text_color(0, 0, 0)
                         pdf.set_font("Helvetica", "B", 12)
                         safe_title = iss["title"].encode("latin-1", "replace").decode("latin-1")
@@ -1946,7 +1946,7 @@ def page_admin():
                         pdf.multi_cell(0, 6, safe_desc)
                         pdf.ln(6)
                         # Stamp
-                        pdf.set_fill_color(224, 255, 0)
+                        pdf.set_fill_color(225, 29, 72)
                         pdf.set_text_color(0, 0, 0)
                         pdf.set_font("Helvetica", "B", 10)
                         pdf.cell(0, 8,
@@ -2027,8 +2027,8 @@ def page_admin():
                             st.success("✅ Dispatch sent successfully!")
                         else:
                             st.markdown(f"""
-                            <div style="background:#1A1D24;border:2px solid #E0FF00;border-radius:10px;padding:16px;margin-top:8px;">
-                              <div style="color:#E0FF00;font-weight:700;font-size:16px;margin-bottom:8px;">📬 Dispatch Logged (Mail Server Unavailable)</div>
+                            <div style="background:#131836;border:2px solid #E11D48;border-radius:10px;padding:16px;margin-top:8px;">
+                              <div style="color:#E11D48;font-weight:700;font-size:16px;margin-bottom:8px;">📬 Dispatch Logged (Mail Server Unavailable)</div>
                               <div style="color:#C0C0C0;font-size:13px;margin-bottom:8px;">
                                 The SMTP server is not configured in this environment. Your dispatch has been <b>logged and the PDF is ready to download</b>.
                                 Forward the PDF to:
@@ -2048,7 +2048,7 @@ def page_admin():
                     for rec in reversed(st.session_state["dispatch_log"]):
                         status_icon = "✅" if rec["sent"] else "📬"
                         status_label = "Sent" if rec["sent"] else "Logged (Download Ready)"
-                        status_col = "#00FF99" if rec["sent"] else "#E0FF00"
+                        status_col = "#00FF99" if rec["sent"] else "#E11D48"
                         issues_preview = "<br>".join([f"• {t}" for t in rec["issues"][:4]])
                         if len(rec["issues"]) > 4:
                             issues_preview += f"<br><span style='color:#555'>+ {len(rec['issues'])-4} more</span>"
@@ -2088,7 +2088,7 @@ def page_admin():
                 <div style="color:#FFFFFF;font-size:18px;font-weight:700;">{icon_name}</div>
                 <div style="color:#888;font-size:13px;">{desc}</div>
               </div>
-              <div style="color:#E0FF00;font-size:28px;font-weight:900;">📞 {number}</div>
+              <div style="color:#E11D48;font-size:28px;font-weight:900;">📞 {number}</div>
             </div>"""), unsafe_allow_html=True)
 
     st.markdown('<div style="height:16px"></div>', unsafe_allow_html=True)

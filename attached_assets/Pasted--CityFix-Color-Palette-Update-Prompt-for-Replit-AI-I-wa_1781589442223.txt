@@ -1,0 +1,50 @@
+# CityFix — Color Palette Update Prompt (for Replit AI)
+
+I want you to do a **global color swap** across the entire CityFix Streamlit app. Do NOT change any layout, structure, logic, features, copy text, page flow, or functionality — this is a **colors-only** change. Find every instance of the old neon colors anywhere in the codebase (CSS, inline styles, badge templates, button styles, borders, shadows, progress bars, headings) and replace them as specified below.
+
+## Background Color
+- Replace the existing dark charcoal/black background (`#0E1117` or `#000000`) with **Dark Navy Blue**: `#0A0E27`
+- Keep all card backgrounds slightly lighter than the page background, as before (e.g. if cards were `#1A1D24`, shift them to a navy-tinted equivalent like `#131836`), preserving the existing contrast relationship between page background and card background.
+
+## Primary Accent Color (replaces neon yellow `#E0FF00` / `#DFFF00`)
+- New Primary Accent: **Vibrant Coral** `#E11D48`
+- Apply this to: all primary action buttons (Submit, Vote, Download, Report, Save, Log In, Sign Up, etc.), active sliders, progress bars, focus borders, selection tabs, and any element that previously used neon yellow.
+- **Button text on coral buttons must be white (`#FFFFFF`), not black.** Update any button CSS that currently sets black text on the accent color — switch it to white with `font-weight: 700` so it stays clearly legible.
+- Glow/shadow effects on coral buttons should use a coral-tinted shadow, e.g. `box-shadow: 0 0 16px rgba(225, 29, 72, 0.5);` instead of the old yellow glow `rgba(224,255,0, ...)`.
+
+## Secondary Accent Color (new — for secondary buttons, links, and supporting highlights)
+- Add: **Electric Violet** `#7C3AED`
+- Use this for secondary/alternate-action buttons (e.g. "Cancel", "Bypass", "View Details", outline-style buttons, secondary tabs, or any button that should be visually distinct from the main coral CTA but still feel vibrant).
+- Secondary button text: white (`#FFFFFF`).
+- Secondary glow: `box-shadow: 0 0 14px rgba(124, 58, 237, 0.45);`
+
+## Headings
+- Replace any heading color that was previously neon yellow with **Vibrant Coral** `#E11D48` for H1/H2 page titles and section headers (e.g. "CityFix" splash title, "Hi, [Name]" dashboard greeting, section titles like "My Reports", "Notifications").
+- Body text stays white (`#FFFFFF`) and secondary/muted text stays silver (`#C0C0C0`) — do NOT change these.
+
+## Borders
+- Replace every `border: 1px solid #E0FF00;` (or similar neon yellow border) with `border: 1px solid #E11D48;` on primary elements, and `border: 1px solid #7C3AED;` on secondary elements where applicable.
+
+## Status Badges — DO NOT CHANGE
+- Leave the four status badge colors (Reported, Verified, In Progress, Fixed/Resolved) exactly as they are. Only the neon yellow/green accent system is being replaced — the badge palette is a separate system and must stay untouched.
+
+## Urgency Pulse Animation — DO NOT CHANGE
+- The red pulsing keyframe animation for high-severity/high-vote issues should remain red exactly as it is. Do not recolor it to coral.
+
+## Specific things to find and replace
+Search the entire codebase for these old hex values and swap every occurrence based on context (primary accent → coral, anything you added as a secondary/alt accent → violet):
+- `#E0FF00` → `#E11D48` (primary) or `#7C3AED` (where used as a secondary/alt action)
+- `#DFFF00` → `#E11D48`
+- Any `rgba(224, 255, 0, ...)` glow values → `rgba(225, 29, 72, ...)` for coral glows, or `rgba(124, 58, 237, ...)` for violet glows
+- `#0E1117` / `#000000` (page background) → `#0A0E27`
+- Any black text color (`#000000`) sitting on top of the old yellow buttons → change to white (`#FFFFFF`)
+
+## Verification checklist before you finish
+1. Confirm no leftover neon yellow or neon green hex codes remain anywhere in the file (search for `E0FF00`, `DFFF00`, and any neon green values used for buttons).
+2. Confirm all primary buttons render with coral background and white text, and all secondary buttons (if any) render with violet background and white text.
+3. Confirm the background is now dark navy blue everywhere — splash screen, login, dashboard, all 13 pages.
+4. Confirm status badges and the red urgency pulse animation are unchanged.
+5. Run the app and check that there are no syntax errors, no broken CSS (unclosed braces, mismatched quotes), and no Streamlit runtime errors. Fix any issues found during this check before finishing.
+6. Do not alter any Python logic, function names, session state keys, page navigation, voting rules, Haversine calculations, PDF generation, or any non-visual behavior. This is strictly a CSS/color-token change.
+
+Confirm when done by listing every file and section you touched.
